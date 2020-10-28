@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{%load static %}
+{% load crispy_forms_tags %}
+
+<!-- Extra head here -->
+{% block extrahead %}
+<title>WhatsIdea</title>
+<meta name="description" content="">
+{% endblock extrahead %}
+
+
+
+<!-- Content here -->
+{% block content %}
+<main>
+    <div class="form-group">
+
+        <form action="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Welcome to the Idea Land!</legend>
+                {{ form | crispy }}
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</main>
+
+{% endblock content %}
