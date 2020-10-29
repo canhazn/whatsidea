@@ -2,7 +2,7 @@
     <div class="header-area">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="">WhatsIdea.Business</a>
+                <a class="navbar-brand" href="">whatsIdea.Business</a>
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -10,7 +10,8 @@
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user-login-page' %}">Login | Register</a>
+                        <a class="nav-link d-inline p-0" href="{% url 'user-register-page' %}">Register</a> |
+                        <a class="nav-link d-inline p-0" href="{% url 'user-login-page' %}">Login</a> 
                     </li>
                     {% endif %}
                 </ul>

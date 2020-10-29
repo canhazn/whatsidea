@@ -20,5 +20,6 @@ from whatsidea.views import homePage
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homePage, name="home-page"),
-    path('', include('user.urls'))
+    path('', include('user.urls')),
+    path('idea/', include('idea.urls'))
 ]
