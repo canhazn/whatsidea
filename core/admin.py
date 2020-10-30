@@ -3,12 +3,22 @@ from core import models
 
 
 class IdeaAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'get_owners']
+
+    def get_owners(self, obj):
+        return ",".join([str(user) for user in obj.user.all()])
+
+    get_owners.short_description = "owner"
+
 
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ['idea', 'content']
 
+class ContributeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'idea', 'parent', 'content']
+
 
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
+admin.site.register(models.Contribute, ContributeAdmin)

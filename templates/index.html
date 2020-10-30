@@ -33,12 +33,12 @@
         </form>
     </div>
 
-    <div class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left">
+    <a href="{% url 'idea-create-page' %}" class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left">
         <img src="/static/img/say-hi.png" alt="">
         <span>Have</span>
         <span>New</span>
         <span>Idea</span>
-    </div>
+    </a>
 
     <div>
         {% for idea in ideas %}

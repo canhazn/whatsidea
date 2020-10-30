@@ -1,0 +1,11 @@
+# remember to load your custom tags file
+<ul>
+    {% for sub in subs %}
+        <li>
+            {{ sub.name }}
+            {% if sub.parent.count > 0 %}
+                {% tree_structure sub %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

@@ -3,5 +3,6 @@ from idea import views
 
 
 urlpatterns = [
-    path("<slug:slug>/", views.ideaDetail, name="idea-detail-page")
+    path("create/", views.ideaCreate, name="idea-create-page"),
+    path("<slug:slug>/", views.ideaDetail, name="idea-detail-page"),
 ]

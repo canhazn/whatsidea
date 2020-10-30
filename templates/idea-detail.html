@@ -12,7 +12,7 @@
 
 <!-- Content here -->
 {% block content %}
-<style>
+<!-- <style>
     .border-left-primary {
         border-left: .25rem solid #4e73df !important;
         border-radius: .35rem;
@@ -32,7 +32,7 @@
         border-left: .25rem solid #343a40 !important;
         border-radius: .35rem;
     }
-</style>
+</style> -->
 <main>
     <nav class="navbar px-0 border-bottom">
         <h1 class="h3">{{ idea.title }}</h1>
@@ -48,7 +48,15 @@
                 </svg>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="">Edit</a>
+
+
+                {% for userofidea in idea.user.all %}
+                    {% if user == userofidea  %}
+                    <a class="dropdown-item" href="">Edit</a>
+                    {% endif %}
+                {% endfor %}
+
+                
                 <a class="dropdown-item" href="">Report</a>
             </div>
         </div>
@@ -62,8 +70,8 @@
         <p>{{ idea.solution }}</p>
     </div>
 
-    <div>
-        <div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="vote">
             <a class="navbar-brand" href="">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-capslock-fill" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
@@ -73,23 +81,37 @@
             </a>
             <span>315</span>
         </div>
-        <a href="{% url 'idea-detail-page' idea.slug %}">
-            @{{ idea.slug }}
-        </a>
+        <div class="collobrator">
+            {% for user in idea.user.all %}
+            <a href="">@
+                {{ user.username }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'idea-detail-page' idea.slug %}">
+        @{{ idea.slug }}
+    </a>
+
+    <div class="contribute-area">
+        {% for contribute in contributes %}
+        <p class="border-bottom mt-3">
+            <a href="">@{{ contribute.user }}</a>:
+            {{ contribute }}
+        </p>
+
+        {% for sub in contribute.children.all %}
+        <p class="border-bottom ml-3"><a href="">@{{ sub.user }}</a>: {{ sub }}</p>
+        {% endfor %}
+        {% endfor %}
     </div>
 
 
 
-    {% for user in idea.user.all %}
-    <p>
-        {{ user.username }}
-    </p>
-    {% endfor %}
-
 
 
     {% for post in idea.post_set.all %}
-    <div class="border p-3">
+    <div class="border border-left-dark p-3 my-3">
         <p class="border-bottom">
             {{ post.content }}
         </p>

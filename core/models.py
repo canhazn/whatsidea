@@ -28,3 +28,15 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.content)
+
+
+class Contribute(models.Model):
+    idea = models.ForeignKey(Idea, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
+    content = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.content)
