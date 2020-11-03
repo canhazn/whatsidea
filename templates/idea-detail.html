@@ -50,9 +50,10 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
 
-                {% for userofidea in idea.user.all %}
-                    {% if user == userofidea  %}
-                    <a class="dropdown-item" href="">Edit</a>
+                {% for owner in idea.user.all %}
+                    {% if user == owner  %}
+                    <a class="dropdown-item" href="{% url 'idea-update-page' idea.slug %}">Edit</a>
+                    <a class="dropdown-item" href="{% url 'idea-delete-page' idea.slug %}">Delete</a>
                     {% endif %}
                 {% endfor %}
 
