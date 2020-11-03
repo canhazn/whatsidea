@@ -11,14 +11,19 @@ class IdeaAdmin(admin.ModelAdmin):
     get_owners.short_description = "owner"
 
 
-
 class PostAdmin(admin.ModelAdmin):
     list_display = ['idea', 'content']
+
 
 class ContributeAdmin(admin.ModelAdmin):
     list_display = ['user', 'idea', 'parent', 'content']
 
 
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'idea', 'date_created']
+
+
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Contribute, ContributeAdmin)
+admin.site.register(models.Vote, VoteAdmin)
