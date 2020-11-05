@@ -29,6 +29,9 @@ class Post(models.Model):
     def __str__(self):
         return str(self.content)
 
+    class Meta:
+        ordering = ["date_created"]
+
 
 class Contribute(models.Model):
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE)

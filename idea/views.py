@@ -13,7 +13,8 @@ def idea_create(request):
             return redirect("idea-detail-page", slug=idea.slug)
 
     context = {
-        "form": forms.IdeaForm
+        "form": forms.IdeaForm,
+        "post_form": forms.PostForm 
     }
 
     return render(request, "idea-create.html", context)
