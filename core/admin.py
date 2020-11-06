@@ -15,7 +15,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ['idea', 'content']
 
 
-class ContributeAdmin(admin.ModelAdmin):
+class ContributionAdmin(admin.ModelAdmin):
     list_display = ['user', 'idea', 'parent', 'content']
 
 
@@ -25,5 +25,5 @@ class VoteAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
-admin.site.register(models.Contribute, ContributeAdmin)
+admin.site.register(models.Contribution, ContributionAdmin)
 admin.site.register(models.Vote, VoteAdmin)

@@ -30,10 +30,10 @@ class Post(models.Model):
         return str(self.content)
 
     class Meta:
-        ordering = ["date_created"]
+        ordering = ["-date_created"]
 
 
-class Contribute(models.Model):
+class Contribution(models.Model):
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     parent = models.ForeignKey(

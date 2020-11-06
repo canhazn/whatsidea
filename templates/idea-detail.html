@@ -43,8 +43,7 @@
         <h1 class="h3">{{ idea.title }}</h1>
 
         <div class="dropdown">
-            <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+            <button type="button" class="btn" data-toggle="dropdown">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
@@ -52,18 +51,14 @@
                     </path>
                 </svg>
             </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-
-
+            <div class="dropdown-menu dropdown-menu-right">
                 {% for owner in idea.user.all %}
                 {% if user == owner  %}
                 <a class="dropdown-item" href="{% url 'idea-update-page' idea.slug %}">Edit</a>
                 <a class="dropdown-item" href="{% url 'idea-delete-page' idea.slug %}">Delete</a>
                 {% endif %}
                 {% endfor %}
-
-
-                <a class="dropdown-item" href="">Report</a>
+                <a class="dropdown-item cursor-not-allowed" href="">Report</a>
             </div>
         </div>
 
@@ -77,7 +72,7 @@
     </div>
 
     <!-- vote count -->
-    <section class="contribute-area">
+    <section class="contribution-area">
         <div class="d-flex justify-content-between align-items-center">
             <div class="vote">
                 <a class="navbar-brand mr-0" href="">
@@ -96,69 +91,153 @@
                             d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .036-.054l.003-.01v-.008a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003l-.003-.01a.214.214 0 0 0-.036-.053.859.859 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.036.054l-.003.01v.002l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855z" />
                     </svg>
                 </a>
-                <span>{{ idea.contribute_set.all.count }} contributes</span>
+                <span>{{ idea.contribution_set.all.count }} contributions</span>
             </div>
             <a href="{% url 'idea-detail-page' idea.slug %}">
                 @{{ idea.slug }}
             </a>
         </div>
 
-        <div class="contribute-area">
-            {% for contribute in contributes %}
+        <div class="contribution-area">
+            {% for contribution in contributions %}
             <div>
-                <div class="contributes mt-3 px-2 border-left-info">
-                    <div class="contribute-content">
-                        <p class="m-0"> {{ contribute }} </p>
+                <div class="contributions mt-3 px-2 border-left-info">
+                    <div class="contribution-content">
+                        <p class="m-0"> {{ contribution }} </p>
                     </div>
-                    <div class="">
-                        <a href="">@{{ contribute.user }}</a>:
-                        <span>{{ contribute.date_created }}</span>
-                        <span class="badge badge-pill btn btn-light">Like</span>
-                        <span class="badge badge-pill btn btn-light">Reply</span>
-                        <span class="badge badge-pill btn btn-light">More</span>
+                    <div class="d-flex p-0">
+                        <div>
+                            <a href="">@{{ contribution.user }}:</a>
+                            <span>{{ contribution.date_created | date:"d/m/y H:i"}}</span>
+                        </div>
+                        <div class="navbar p-0">
+                            <span class="badge badge-pill btn btn-light">Heart</span>
+                            <span class="badge badge-pill btn btn-light btn-reply" data-toggle="collapse"
+                                data-target="#sub-contribution-form-{{ contribution.id }}"
+                                data-contribution_id="{{ contribution.id }}">Reply</span>
+                            <div class="dropup inline-block">
+                                <span class="badge badge-pill btn btn-light" data-toggle="dropdown">More</span>
+                                <div class="dropdown-menu dropdown-menu-right">
+
+                                    {% if user == contribution.user  %}
+                                    <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                                        data-target="#confirm-delelte-contribution-{{contribution.id}}">Delete</a>
+                                    {% else %}
+                                    <a class="dropdown-item cursor-not-allowed">Report</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if user == contribution.user  %}
+                            <!-- confirm delete contribution -->
+                            <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+                                id="confirm-delelte-contribution-{{contribution.id}}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Are you sure to delete this?</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-contribution-delete"
+                                                data-contribution_id="{{ contribution.id }}">Yes</button>
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
-                {% for sub in contribute.children.all %}
+                {% for sub in contribution.children.all %}
                 <div class="subs mt-3 ml-3 px-2 border-left-info">
-                    <div class="contribute-content">
+                    <div class="contribution-content">
                         <p class="m-0 "> {{ sub }}</p>
                     </div>
-                    <div class="">
-                        <a href="">@{{ sub.user }}</a>:
-                        <span>{{ sub.date_created }}</span>
-                        <span class="badge badge-pill btn btn-light">Like</span>
-                        <span class="badge badge-pill btn btn-light">Reply</span>
-                        <span class="badge badge-pill btn btn-light">More</span>
-                    </div>
 
+                    <div class="d-flex p-0">
+                        <div>
+                            <a href="">@{{ sub.user }}:</a>
+                            <span>{{ sub.date_created | date:"d/m/y H:i"}}</span>
+                        </div>
+
+                        <div class="navbar p-0">
+                            <span class="badge badge-pill btn btn-light">Heart</span>
+                            <span class="badge badge-pill btn btn-light btn-reply" data-toggle="collapse"
+                                data-target="#sub-contribution-form-{{ contribution.id }}"
+                                data-contribution_id="{{ contribution.id }}">Reply</span>
+                            <div class="dropup inline-block">
+                                <span class="badge badge-pill btn btn-light" data-toggle="dropdown">More</span>
+                                <div class="dropdown-menu dropdown-menu-right">
+
+                                    {% if user == sub.user  %}
+                                    <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                                        data-target="#confirm-delelte-contribution-{{sub.id}}">Delete</a>
+                                    {% else %}
+                                    <a class="dropdown-item cursor-not-allowed">Report</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if user == sub.user  %}
+                            <!-- confirm delete contribution -->
+                            <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+                                id="confirm-delelte-contribution-{{sub.id}}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Are you sure to delete this?</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-contribution-delete"
+                                                data-contribution_id="{{ sub.id }}">Yes</button>
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
 
-                {% if contribute.children.all.count > 0 %}
-                <div class="input-group mt-3 ml-3 px-2 border-left-secondary">
-                    <textarea class="form-control" aria-label="With textarea"></textarea>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Send</button>
-                    </div>
-
+                <!-- form create sub contribution -->
+                <div class="collapse collapse-contribution-form mt-3 ml-3 w-auto border-left-secondary"
+                    id="sub-contribution-form-{{ contribution.id }}">
+                    <form class="input-group create-new-contribution-form" data-idea_id="{{ idea.id }}"
+                        data-parent_id="{{ contribution.id }}">
+                        <textarea class="form-control" name="content"
+                            id="textarea-contribution-{{ contribution.id }}"></textarea>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-create-new-contribution"
+                                type="submit">Send</button>
+                        </div>
+                    </form>
                 </div>
-                {% endif %}
             </div>
             {% endfor %}
-            <div class="create-parent-contribute-area mt-3 pt-3 border-top">                
+
+            <div class="create-parent-contribution-area mt-3 pt-3 border-top">
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
                     aria-expanded="false" aria-controls="collapseExample">
-                    Write new contribute
+                    Write new contribution
                 </button>
 
                 <div class="collapse" id="collapseExample">
-                    <div class="input-group mt-3 px-2 border-left-secondary">
-                        <textarea class="form-control" aria-label="With textarea"></textarea>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Send</button>
-                        </div>
-                        
+                    <div class="mt-3 border-left-secondary">
+                        <form class="input-group create-new-contribution-form" data-idea_id="{{ idea.id }}">
+                            <textarea class="form-control" name="content"></textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-create-new-contribution"
+                                    type="submit">Send</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -168,17 +247,67 @@
 
 
     <!-- Post area ------------>
-    <div class="post-area">
+    <section class="post-area mt-3">
+        <!-- create post area -->
+        <div class="post-create-area">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Create
+                post</button>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Create post</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="post-form-area" id="post-create-form">
+                                <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
+                                <textarea name="content" class="form-control" placeholder="Content"></textarea>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="btn-post-create">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- post list -->
         {% for post in idea.post_set.all %}
-        <div class="border p-3 my-3">
-            <p class="">
+        <div class="post border px-3 my-3 rounded">
+            <div class="" style="white-space: pre-line;">
                 {{ post.content }}
-            </p>
-            <div class="navbar border-top p-0">
-                <span>{{ post.date_created }}</span>
-                <div class="dropdown">
+            </div>
+            <div class="navbar border-top p-0 mt-3 mb-2">
+                <div class="vote">
+                    <a class="navbar-brand mr-0" href="">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-capslock-fill"
+                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z" />
+                        </svg>
+                    </a>
+                    <span>{{ idea.vote_set.all.count }}</span>
+
+                    <a class="navbar-brand mr-0 ml-3" href="">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-puzzle-fill" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .036-.054l.003-.01v-.008a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003l-.003-.01a.214.214 0 0 0-.036-.053.859.859 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.036.054l-.003.01v.002l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855z" />
+                        </svg>
+                    </a>
+                    <span>{{ idea.contribution_set.all.count }}</span>
+                </div>
+
+                <span>{{ post.date_created | date:"d/m/y H:i" }}</span>
+                <div class="dropup">
                     <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
@@ -196,8 +325,10 @@
                         <a class="dropdown-item cursor-pointer" data-toggle="modal"
                             data-target="#confirm-modal-{{post.id}}">Delete</a>
 
+
                         {% endif %}
                         {% endfor %}
+                        <a class="dropdown-item cursor-not-allowed" data-toggle="modal" data-target="">Report</a>
                     </div>
 
                     <!-- edit model -->
@@ -249,38 +380,7 @@
             </div>
         </div>
         {% endfor %}
-
-
-        <!-- create post area -->
-        <div class="post-create-area">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Create
-                post</button>
-
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Create post</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form class="post-form-area" id="post-create-form">
-                                <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
-                                <textarea name="content" class="form-control" placeholder="Content"></textarea>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="btn-post-create">Create</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
     <!-- End post area -------------->
 </main>
 
@@ -297,6 +397,64 @@
         let post_id = $(this).data("post_id");
         delete_post(post_id);
     });
+
+
+    $(".create-new-contribution-form").submit(function (event) {
+        event.preventDefault();
+        let idea_id = $(this).data("idea_id");
+        let parent_id = $(this).data("parent_id");
+
+        let form = $(this).serializeJSON();
+        create_contribution(idea_id, parent_id, form.content);
+    })
+
+    $(".btn-contribution-delete").click(function (event) {
+        contribution_id = $(this).data("contribution_id");
+        delete_contribution(contribution_id);
+    })
+
+    function delete_contribution(contribution_id) {
+        data = JSON.stringify({
+            "contribution_id": contribution_id
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'contribution-delete-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result) {
+            console.log(result)
+            window.location.reload()
+        })
+    }
+
+
+    function create_contribution(idea_id, parent_id, content) {
+        data = JSON.stringify({
+            "idea_id": idea_id,
+            "parent_id": parent_id,
+            "content": content
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'contribution-create-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result) {
+            console.log(result)
+            window.location.reload()
+        })
+    }
 
     function delete_post(post_id) {
         data = JSON.stringify({
@@ -338,5 +496,12 @@
             window.location.reload()
         })
     }
+
+    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
+        console.log(this)
+        let textarea = $(this).find("textarea");
+        textarea.focus();
+
+    })
 </script>
 {% endblock content %}

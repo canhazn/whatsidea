@@ -56,11 +56,11 @@ def idea_delete(request, slug):
 
 def idea_detail(request, slug):
     idea = get_object_or_404(models.Idea, slug=slug)
-    contributes = idea.contribute_set.filter(parent__isnull=True)
-    # contributes = models.Contribute.objects.filter(parent__isnull=True)
+    contributions = idea.contribution_set.filter(parent__isnull=True)
+    # contributions = models.Contribute.objects.filter(parent__isnull=True)
 
     context = {
         "idea": idea,
-        "contributes": contributes
+        "contributions": contributions
     }
     return render(request, "idea-detail.html", context)
