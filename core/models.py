@@ -30,7 +30,7 @@ class Post(models.Model):
         return str(self.content)
 
     class Meta:
-        ordering = ["-date_created"]
+        ordering = ["date_created"]
 
 
 class Contribution(models.Model):
