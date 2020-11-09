@@ -21,5 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homePage, name="home-page"),
     path('', include('user.urls')),
-    path('idea/', include('idea.urls'))
+    path('idea/', include('idea.urls')),
+    path('post/', include('post.urls')),
+    path('vote/', include('vote.urls')),
+    path('contribution/', include('contribution.urls'))
 ]
