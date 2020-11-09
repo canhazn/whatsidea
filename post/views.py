@@ -14,7 +14,7 @@ def post_create(request):
     user = request.user
     idea_id = data['idea_id']
     idea = models.Idea.objects.get(id=idea_id)
-
+    
     post = models.Post.objects.create(
         user=user,
         idea=idea,
