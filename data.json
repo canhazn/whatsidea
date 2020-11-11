@@ -1,0 +1,476 @@
+[{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "core",
+        "model": "idea"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "core",
+        "model": "post"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+        "app_label": "core",
+        "model": "vote"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+        "app_label": "core",
+        "model": "contribution"
+    }
+}, {
+    "model": "sessions.session",
+    "pk": "zwuw5vg3gftd8ox303y4xttrimwo3z4u",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSHA8Cgu3fsNZIBBqgaS0q6M_65NutDtPefcFwu4rTVsg5YwZ3Zmkp1-t4jpQW0H-Y7t1nnqbV3myHeFH3Twa8_0vBzu30HFUb81eAEKLToQHl2RRWuvpqiyn8gIEaW0LhVKxkmyYIryQB5RGtJOCAD2_gC-MDbe:1kc7ER:GEFBsfU3PLSy5ckJCMqF2k9IwZrMzOVgnWkU3bsvU0Q",
+        "expire_date": "2020-11-23T13:29:15.179Z"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": 1,
+        "codename": "add_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": 1,
+        "codename": "change_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": 1,
+        "codename": "delete_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": 1,
+        "codename": "view_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+        "name": "Can add permission",
+        "content_type": 2,
+        "codename": "add_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+        "name": "Can change permission",
+        "content_type": 2,
+        "codename": "change_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": 2,
+        "codename": "delete_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+        "name": "Can view permission",
+        "content_type": 2,
+        "codename": "view_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+        "name": "Can add group",
+        "content_type": 3,
+        "codename": "add_group"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+        "name": "Can change group",
+        "content_type": 3,
+        "codename": "change_group"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+        "name": "Can delete group",
+        "content_type": 3,
+        "codename": "delete_group"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+        "name": "Can view group",
+        "content_type": 3,
+        "codename": "view_group"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+        "name": "Can add user",
+        "content_type": 4,
+        "codename": "add_user"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+        "name": "Can change user",
+        "content_type": 4,
+        "codename": "change_user"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+        "name": "Can delete user",
+        "content_type": 4,
+        "codename": "delete_user"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+        "name": "Can view user",
+        "content_type": 4,
+        "codename": "view_user"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+        "name": "Can add content type",
+        "content_type": 5,
+        "codename": "add_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+        "name": "Can change content type",
+        "content_type": 5,
+        "codename": "change_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": 5,
+        "codename": "delete_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+        "name": "Can view content type",
+        "content_type": 5,
+        "codename": "view_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+        "name": "Can add session",
+        "content_type": 6,
+        "codename": "add_session"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+        "name": "Can change session",
+        "content_type": 6,
+        "codename": "change_session"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+        "name": "Can delete session",
+        "content_type": 6,
+        "codename": "delete_session"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+        "name": "Can view session",
+        "content_type": 6,
+        "codename": "view_session"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+        "name": "Can add idea",
+        "content_type": 7,
+        "codename": "add_idea"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+        "name": "Can change idea",
+        "content_type": 7,
+        "codename": "change_idea"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+        "name": "Can delete idea",
+        "content_type": 7,
+        "codename": "delete_idea"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+        "name": "Can view idea",
+        "content_type": 7,
+        "codename": "view_idea"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+        "name": "Can add post",
+        "content_type": 8,
+        "codename": "add_post"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+        "name": "Can change post",
+        "content_type": 8,
+        "codename": "change_post"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+        "name": "Can delete post",
+        "content_type": 8,
+        "codename": "delete_post"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+        "name": "Can view post",
+        "content_type": 8,
+        "codename": "view_post"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+        "name": "Can add vote",
+        "content_type": 9,
+        "codename": "add_vote"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+        "name": "Can change vote",
+        "content_type": 9,
+        "codename": "change_vote"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+        "name": "Can delete vote",
+        "content_type": 9,
+        "codename": "delete_vote"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+        "name": "Can view vote",
+        "content_type": 9,
+        "codename": "view_vote"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+        "name": "Can add contribution",
+        "content_type": 10,
+        "codename": "add_contribution"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+        "name": "Can change contribution",
+        "content_type": 10,
+        "codename": "change_contribution"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+        "name": "Can delete contribution",
+        "content_type": 10,
+        "codename": "delete_contribution"
+    }
+}, {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+        "name": "Can view contribution",
+        "content_type": 10,
+        "codename": "view_contribution"
+    }
+}, {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$hKM4PJ8lklPc$lUZ7x8+YFK1BaPQ+EoZA7C0KJyVXxj4HGWtKbEf//2k=",
+        "last_login": "2020-11-09T13:29:14.923Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "canhazn@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2020-11-09T13:28:59.303Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}, {
+    "model": "core.idea",
+    "pk": 1,
+    "fields": {
+        "title": "R\u01b0\u1ee3u Hinh",
+        "slug": "ruouhinh",
+        "problem": "R\u01b0\u1ee3u th\u00ec nhi\u1ec1u nh\u00e0 t\u1ef1 n\u1ea5u l\u1eafm. Nh\u01b0ng c\u00f3 m\u1ea5y nh\u00e0 l\u00e0m th\u00e0nh th\u01b0\u01a1ng hi\u1ec7u, b\u00e1n r\u1ed9ng r\u00e3i \u0111\u01b0\u1ee3c.",
+        "solution": "Build web l\u00e0m marketing.\r\nR\u1ed3i sau \u0111\u00f3 t\u00ednh b\u00e0i m\u1edf chu\u1ed7i. \r\nKey: th\u1ee9 g\u00ec \u0111\u00f3ng g\u00f3i \u0111\u01b0\u1ee3c th\u00ec s\u1ebd nh\u00e2n r\u1ed9ng \u0111\u01b0\u1ee3c.",
+        "is_publish": true,
+        "is_success": false,
+        "address": "www.ruouhinh.com",
+        "phone": "",
+        "website": "",
+        "corver_image": "",
+        "date_created": "2020-11-09T13:47:21.299Z",
+        "user": [1]
+    }
+}, {
+    "model": "core.idea",
+    "pk": 3,
+    "fields": {
+        "title": "T\u00ecm ra l\u1eeda",
+        "slug": "lua",
+        "problem": "\u0111\u1ed9ng v\u1eadt cao c\u1ea5p",
+        "solution": "th\u1ebf l\u00e0 \u0111\u01b0\u1ee3c",
+        "is_publish": true,
+        "is_success": false,
+        "address": "",
+        "phone": "",
+        "website": "",
+        "corver_image": "",
+        "date_created": "2020-11-09T15:23:28.652Z",
+        "user": [1]
+    }
+}, {
+    "model": "core.post",
+    "pk": 2,
+    "fields": {
+        "idea": 1,
+        "user": 1,
+        "content": "L\u00e0m web th\u00ec c\u1ea7n ph\u1ea3i c\u00f3 r\u1ea5t nhi\u1ec1u n\u1ed9i dung, \u1ea3nh, video web chu\u1ea9n seo th\u00ec d\u1ec5 nh\u01b0ng l\u00ean top google th\u00ec g\u1ea7n nh\u01b0 l\u00e0 kh\u00f4ng th\u1ec3?",
+        "date_created": "2020-11-09T13:48:48.686Z"
+    }
+}, {
+    "model": "core.post",
+    "pk": 3,
+    "fields": {
+        "idea": 1,
+        "user": 1,
+        "content": "Contact seo service: ph\u1ea3i m\u1ea5t r\u1ea5t nhi\u1ec1u ti\u1ec1n. Kh\u00f4ng kh\u1ea3 thi.\r\nNh\u01b0 v\u1eady th\u00ec google adword v\u1eady.",
+        "date_created": "2020-11-09T13:48:52.856Z"
+    }
+}, {
+    "model": "core.post",
+    "pk": 5,
+    "fields": {
+        "idea": 1,
+        "user": 1,
+        "content": "M\u1edf chu\u1ed7i th\u00ec h\u1eb3n l\u00e0 ph\u1ea3i c\u1ea7n r\u1ea5t nhi\u1ec1u ti\u1ec1n \ud83e\udd11 ",
+        "date_created": "2020-11-09T13:51:15.093Z"
+    }
+}]

@@ -78,13 +78,17 @@ WSGI_APPLICATION = 'whatsidea.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd5n6dclp38mj3o',
-        'USER': 'lyfoufbylvvitn',
-        'PASSWORD': '77a1e2e615b0eaced726bdfb54527f06ed0c1d18a81228e1214ee74878941ef1',
-        'HOST': 'ec2-100-25-100-81.compute-1.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'd5n6dclp38mj3o',
+    #     'USER': 'lyfoufbylvvitn',
+    #     'PASSWORD': '77a1e2e615b0eaced726bdfb54527f06ed0c1d18a81228e1214ee74878941ef1',
+    #     'HOST': 'ec2-100-25-100-81.compute-1.amazonaws.com',
+    #     'PORT': '5432'
+    # }
 }
 
 
