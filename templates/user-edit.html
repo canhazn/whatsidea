@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{%load static %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+
+<!-- Extra head here -->
+{% block extrahead %}
+<title>whatsIdea</title>
+<meta name="description" content="">
+{% endblock extrahead %}
+
+
+
+<!-- Content here -->
+{% block content %}
+<main>
+
+
+
+    <div class="my-3 bg-danger text-white rounded">
+        {% if request.method == "POST" %}
+            <div class="p-3">{{ form.errors }}</div>
+        {% endif %}
+    </div>
+    <form method="POST">
+        {% csrf_token %}        
+        <fieldset class="form-group">
+            {% render_field form.username class="form-control mb-3" placeholder="Username" %}
+            {% render_field form.email class="form-control mb-3" placeholder="Email" %}
+            {% render_field form.first_name class="form-control mb-3" placeholder="First name" %}
+            {% render_field form.last_name class="form-control mb-3" placeholder="Last name" %}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+
+    <div class="border-top pt-3">
+        <p>Already have an account? <a href="{% url 'user-login-page' %}">Login</a></p>
+    </div>
+</main>
+
+{% endblock content %}

@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from user import forms
+from core import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth import login as loginMethod
 
 
@@ -47,3 +47,30 @@ def profileSetting(request):
         # 'user': user
     }
     return render(request, 'user-profile-setting.html', context)
+
+
+def user_detail(request, username):
+    user = get_object_or_404(User, username=username)
+
+    context = {
+        'user': user
+    }
+    return render(request, 'user-detail.html', context)
+
+
+def user_edit(request, username):
+
+    if request.method == "POST":
+        form = forms.UserEditForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = form.save()    
+            return redirect("user-detail-page", user.username)
+        return render(request, 'user-edit.html', {
+            'form': form
+        })
+    else:
+        form = forms.UserEditForm(instance=request.user)
+        return render(request, 'user-edit.html', {
+            'form': form
+        })
+

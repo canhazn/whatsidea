@@ -8,5 +8,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page="home-page"),
          name="user-logout"),
     path('profile-setting/', views.profileSetting, name="profile-setting-page"),
+    path('user/<slug:username>/', views.user_detail, name="user-detail-page"),
+    path('user/edit/<slug:username>/', views.user_edit, name="user-edit-page"),
     path('social-auth/', include('social_django.urls', namespace="social")),
 ]
