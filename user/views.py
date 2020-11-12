@@ -11,8 +11,8 @@ def login(request):
     if request.user.is_authenticated:
         return redirect("home-page")
 
+    form = AuthenticationForm(data=request.POST)
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if user is not None:
@@ -20,7 +20,7 @@ def login(request):
                 return redirect("home-page")
 
     return render(request, 'user-login.html', {
-        'loginForm': AuthenticationForm()
+        'form': form
     })
 
 
@@ -29,15 +29,15 @@ def register(request):
     if request.user.is_authenticated:
         return redirect("home-page")
 
+    form = forms.UserRegisterForm(data=request.POST)
     if request.method == "POST":
-        form = forms.UserRegisterForm(data=request.POST)
         if form.is_valid():
             user = form.save()
             loginMethod(request, user)
             return redirect("home-page")
 
     return render(request, 'user-register.html', {
-        'registerForm': forms.UserRegisterForm(),
+        'form': form
     })
 
 
