@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    "social_django",
+
     'core',
-    'user'
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,11 @@ DATABASES = {
     # }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -139,3 +145,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 LOGIN_URL = "/register"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout'
+LOGOUT_REDIRECT_URL = '/login'
+
+SOCIAL_AUTH_FACEBOOK_KEY = "863509961057290"                      # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = "ced7230060aa56b7c0547d1dd52a853a"  # App Secret
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "598214999493-ea1qgntdch7b6n1mj0e6n1b8d7lne1ie.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "G0Ie_tNd-L3p8mkF7b7oB5KT"

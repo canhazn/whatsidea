@@ -15,6 +15,9 @@
 <main>
     <legend class="border-bottom mb-4">Welcome to the Idea Land!</legend>
 
+
+    <a class="btn btn-outline-primary" href="{% url 'social:begin' 'google-oauth2' %}">Register with google</a>
+
     <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
