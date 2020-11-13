@@ -17,7 +17,7 @@ def idea_create(request):
         "post_form": forms.PostForm 
     }
 
-    return render(request, "idea-create.html", context)
+    return render(request, "idea/idea-create.html", context)
 
 
 @login_required()
@@ -37,7 +37,7 @@ def idea_update(request, slug):
         "form": idea_form
     }
 
-    return render(request, "idea-update.html", context)
+    return render(request, "idea/idea-update.html", context)
 
 
 @login_required()
@@ -51,16 +51,15 @@ def idea_delete(request, slug):
     context = {
         "idea": idea
     }
-    return render(request, "idea-delete.html", context)
+    return render(request, "idea/idea-delete.html", context)
 
 
 def idea_detail(request, slug):
-    idea = get_object_or_404(models.Idea, slug=slug)
-    contributions = idea.contribution_set.filter(parent__isnull=True)
-    # contributions = models.Contribute.objects.filter(parent__isnull=True)
+    idea = get_object_or_404(models.Idea, slug=slug)    
+    contributions = idea.contribution_set.filter(parent__isnull=True)    
 
     context = {
         "idea": idea,
         "contributions": contributions
     }
-    return render(request, "idea-detail.html", context)
+    return render(request, "idea/idea-detail.html", context)

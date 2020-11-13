@@ -1,0 +1,47 @@
+{% extends 'user/user-base.html' %}
+
+{%load static %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+
+<!-- Extra head here -->
+{% block extrahead %}
+<title>whatsIdea</title>
+<meta name="description" content="">
+{% endblock extrahead %}
+
+
+
+<!-- Content here -->
+{% block main-content %}
+<main>
+    <legend class="border-bottom mb-4">Welcome to the Idea Land!</legend>
+
+    <div class="social-login col-md-4 p-0">
+        <a class="btn btn-block btn-outline-primary" href="{% url 'social:begin' 'google-oauth2' %}">Register with
+            google</a>
+        <a class="btn btn-block btn-outline-primary mt-3 disabled" disabled>Register with Facebook</a>
+    </div>
+    <div class="my-3 bg-danger text-white rounded">
+        {% if request.method == "POST" %}
+        <div class="p-3">{{ form.errors }}</div>
+        {% endif %}
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            {% render_field form.username class="form-control mb-3" placeholder="Username" %}
+            {% render_field form.email class="form-control mb-3" placeholder="Email" %}
+            {% render_field form.password1 class="form-control mb-3" placeholder="Password" %}
+            {% render_field form.password2 class="form-control mb-3" placeholder="Confirm password" %}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+
+    <div class="border-top mt-3 pt-3">
+        <p>Already have an account? <a href="{% url 'user-login-page' %}">Login</a></p>
+    </div>
+</main>
+
+{% endblock main-content %}

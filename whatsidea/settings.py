@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'widget_tweaks',
+    "social_django",
+
     'core',
-    'user'
 ]
 
 MIDDLEWARE = [
@@ -78,15 +80,24 @@ WSGI_APPLICATION = 'whatsidea.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd5n6dclp38mj3o',
-        'USER': 'lyfoufbylvvitn',
-        'PASSWORD': '77a1e2e615b0eaced726bdfb54527f06ed0c1d18a81228e1214ee74878941ef1',
-        'HOST': 'ec2-100-25-100-81.compute-1.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'd5n6dclp38mj3o',
+    #     'USER': 'lyfoufbylvvitn',
+    #     'PASSWORD': '77a1e2e615b0eaced726bdfb54527f06ed0c1d18a81228e1214ee74878941ef1',
+    #     'HOST': 'ec2-100-25-100-81.compute-1.amazonaws.com',
+    #     'PORT': '5432'
+    # }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -135,3 +146,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 LOGIN_URL = "/register"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout'
+LOGOUT_REDIRECT_URL = '/login'
+
+SOCIAL_AUTH_FACEBOOK_KEY = "863509961057290"                      # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = "ced7230060aa56b7c0547d1dd52a853a"  # App Secret
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "598214999493-ea1qgntdch7b6n1mj0e6n1b8d7lne1ie.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "G0Ie_tNd-L3p8mkF7b7oB5KT"

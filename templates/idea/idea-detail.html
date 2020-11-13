@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'idea/idea-base.html' %}
 {%load static %}
 {% load crispy_forms_tags %}
 
@@ -11,7 +11,7 @@
 
 
 <!-- Content here -->
-{% block content %}
+{% block main-content %}
 <style>
     .border-left-primary {
         border-left: .25rem solid #4e73df !important;
@@ -41,7 +41,6 @@
 <main>
     <nav class="navbar px-0 border-bottom">
         <h1 class="h3">{{ idea.title }}</h1>
-
         <div class="dropdown">
             <button type="button" class="btn" data-toggle="dropdown">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor"
@@ -52,17 +51,16 @@
                 </svg>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                
+
                 {% if user in idea.user.all  %}
                 <a class="dropdown-item" href="{% url 'idea-update-page' idea.slug %}">Edit</a>
                 <a class="dropdown-item" href="{% url 'idea-delete-page' idea.slug %}">Delete</a>
                 {% else %}
                 <a class="dropdown-item cursor-not-allowed" href="">Report</a>
-                {% endif %}                
-                <a class="dropdown-item cursor-pointer" >Share</a>
+                {% endif %}
+                <a class="dropdown-item cursor-pointer">Share</a>
             </div>
         </div>
-
     </nav>
 
     <div class="p-3 my-3 border border-left-success">
@@ -106,22 +104,18 @@
                     <div class="contribution-content">
                         <p class="m-0"> {{ contribution }} </p>
                     </div>
-                    <div class="d-flex align-items-center p-0">
+                    <div class="p-0">
                         <div class="mr-3">
-                            <a href="">@{{ contribution.user }}</a>
-
-                            {% comment %}
-                            <!-- <span>{{ sub.date_created | date:"d/m/y H:i"}}</span>  -->
-                            {% endcomment %}
-
+                            <a href="{% url 'user-detail-page' contribution.user %}">@{{ contribution.user }}</a>
+                            <span>{{ contribution.date_created | date:"d/m/y H:i"}}</span>
                         </div>
-                        <div class="d-flex align-items-center p-0 align-items-center">
-                            <span class="mx-3">Heart1</span>
-                            <span class="mx-3 btn-reply" data-toggle="collapse"
+                        <div class="navbar p-0 justify-content-start">
+                            <span class="mr-3">Heart1</span>
+                            <span class="mr-3 btn-reply" data-toggle="collapse"
                                 data-target="#sub-contribution-form-{{ contribution.id }}"
                                 data-contribution_id="{{ contribution.id }}">Reply</span>
                             <div class="dropup">
-                                <span class="mx-3" data-toggle="dropdown">More</span>
+                                <span class="mr-3" data-toggle="dropdown">More</span>
                                 <div class="dropdown-menu dropdown-menu-right">
 
                                     {% if user == contribution.user  %}
@@ -163,21 +157,19 @@
                         <p class="m-0 "> {{ sub }}</p>
                     </div>
 
-                    <div class="d-flex p-0">
+                    <div class="">
                         <div>
-                            <a href="">@{{ sub.user }}</a>
-
+                            <a href="{% url 'user-detail-page' sub.user %}">@{{ sub.user }}</a>
+                            <span>{{ sub.date_created | date:"d/m/y h:i"}}</span>
                         </div>
-
-                        <div class="navbar p-0">
-                            <span class="mx-3">Heart</span>
-                            <span class="mx-3 btn-reply" data-toggle="collapse"
+                        <div class="navbar p-0 justify-content-start">
+                            <span class="mr-3">Heart</span>
+                            <span class="mr-3 btn-reply" data-toggle="collapse"
                                 data-target="#sub-contribution-form-{{ contribution.id }}"
                                 data-contribution_id="{{ contribution.id }}">Reply</span>
                             <div class="dropup inline-block">
-                                <span class="mx-3" data-toggle="dropdown">More</span>
+                                <span class="mr-3" data-toggle="dropdown">More</span>
                                 <div class="dropdown-menu dropdown-menu-right">
-
                                     {% if user == sub.user  %}
                                     <a class="dropdown-item cursor-pointer" data-toggle="modal"
                                         data-target="#confirm-delelte-contribution-{{sub.id}}">Delete</a>
@@ -250,167 +242,10 @@
     </section>
 
 
-
-    <!-- Post area ------------>
-    <section class="post-area mt-3">
-        <!-- create post area -->
-        <div class="post-create-area">
-            <div class="btn btn-secondary w-100 cursor-pointer d-flex align-items-center" data-toggle="modal"
-                data-target="#exampleModal">
-
-                <img src="/static/img/say-hi.png" alt="" style="width: 120px;">
-                
-                <div class="d-inline">
-                    <span>Let's update status for</span> <br>
-                    <strong> {{ idea.title }}</strong>
-                </div>
-            </div>
-
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Create post</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form class="post-form-area" id="post-create-form">
-                                <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
-                                <textarea name="content" class="form-control" placeholder="Content"></textarea>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="btn-post-create">Create</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- post list -->
-        {% for post in idea.post_set.all %}
-        <div class="post border px-3 my-3 rounded">
-            <div class="" style="white-space: pre-line;">
-                {{ post.content }}
-            </div>
-            <div class="navbar border-top p-0 mt-3 mb-2">
-                <div class="vote">
-                    <a class="navbar-brand mr-0" href="">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-capslock-fill"
-                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z" />
-                        </svg>
-                    </a>
-                    <span>{{ post.vote_set.all.count }}</span>
-
-                    <a class="navbar-brand mr-0 ml-3" href="">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-puzzle-fill" fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .036-.054l.003-.01v-.008a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003l-.003-.01a.214.214 0 0 0-.036-.053.859.859 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.036.054l-.003.01v.002l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855z" />
-                        </svg>
-                    </a>
-                    <span>{{ post.contribution_set.all.count }}</span>
-                </div>
-
-                <span>{{ post.date_created | date:"d/m/y H:i" }}</span>
-                <div class="dropup">
-                    <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
-                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
-                            </path>
-                        </svg>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                        {% for owner in idea.user.all %}
-                        {% if user == owner  %}
-                        <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                            data-target="#edit-model-{{post.id}}">Edit</a>
-                        <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                            data-target="#confirm-modal-{{post.id}}">Delete</a>
-
-
-                        {% endif %}
-                        {% endfor %}
-                        <a class="dropdown-item cursor-not-allowed" data-toggle="modal" data-target="">Report</a>
-                    </div>
-
-                    <!-- edit model -->
-                    <div class="modal fade" id="edit-model-{{post.id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Edit post</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="form-post-edit" id="form-post-edit-{{ post.id }}">
-                                        <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
-                                        <textarea name="content" class="form-control" placeholder="Content"
-                                            rows="6">{{ post.content }}</textarea>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary btn-post-update">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- confirm model -->
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-                        id="confirm-modal-{{post.id}}">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Are you sure to delete this?</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default btn-post-delete"
-                                        data-post_id="{{ post.id }}">Yes</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </section>
-    <!-- End post area -------------->
 </main>
 
 
 <script>
-    $("#btn-post-create").click(() => {
-        let form = $("#post-create-form").serializeJSON();
-
-        console.log(form);
-        create_post(form.idea_id, form.content);
-    });
-
-    $(".btn-post-delete").click(function () {
-        let post_id = $(this).data("post_id");
-        delete_post(post_id);
-    });
-
 
     $(".create-new-contribution-form").submit(function (event) {
         event.preventDefault();
@@ -469,47 +304,6 @@
         })
     }
 
-    function delete_post(post_id) {
-        data = JSON.stringify({
-            "post_id": post_id
-        })
-
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'post-delete-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        }).done(function (result) {
-            console.log(result)
-            window.location.reload()
-        })
-    }
-
-    function create_post(idea_id, content) {
-        data = JSON.stringify({
-            "idea_id": idea_id,
-            "content": content
-        })
-
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'post-create-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        }).done(function (result) {
-            console.log(result)
-            window.location.reload()
-        })
-    }
-
     $('.collapse-contribution-form').on('shown.bs.collapse', function () {
         console.log(this)
         let textarea = $(this).find("textarea");
@@ -517,4 +311,4 @@
 
     })
 </script>
-{% endblock content %}
+{% endblock main-content %}
