@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'user/user-base.html' %}
+
 {%load static %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
@@ -13,7 +14,7 @@
 
 
 <!-- Content here -->
-{% block content %}
+{% block main-content %}
 <main>
 
 
@@ -34,9 +35,9 @@
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
-    <div class="border-top pt-3">
+    <div class="border-top mt-3 pt-3">
         <p>Already have an account? <a href="{% url 'user-login-page' %}">Login</a></p>
     </div>
 </main>
 
-{% endblock content %}
+{% endblock main-content %}

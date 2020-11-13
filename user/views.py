@@ -19,7 +19,7 @@ def login(request):
                 loginMethod(request, user)
                 return redirect("home-page")
 
-    return render(request, 'user-login.html', {
+    return render(request, 'user/user-login.html', {
         'form': form
     })
 
@@ -36,7 +36,7 @@ def register(request):
             loginMethod(request, user)
             return redirect("home-page")
 
-    return render(request, 'user-register.html', {
+    return render(request, 'user/user-register.html', {
         'form': form
     })
 
@@ -46,7 +46,7 @@ def profileSetting(request):
     context = {
         # 'user': user
     }
-    return render(request, 'user-profile-setting.html', context)
+    return render(request, 'user/user-profile-setting.html', context)
 
 
 def user_detail(request, username):
@@ -55,7 +55,7 @@ def user_detail(request, username):
     context = {
         'user': user
     }
-    return render(request, 'user-detail.html', context)
+    return render(request, 'user/user-detail.html', context)
 
 
 def user_edit(request, username):
@@ -63,14 +63,13 @@ def user_edit(request, username):
     if request.method == "POST":
         form = forms.UserEditForm(request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save()    
+            user = form.save()
             return redirect("user-detail-page", user.username)
-        return render(request, 'user-edit.html', {
+        return render(request, 'user/user-edit.html', {
             'form': form
         })
     else:
         form = forms.UserEditForm(instance=request.user)
-        return render(request, 'user-edit.html', {
+        return render(request, 'user/user-edit.html', {
             'form': form
         })
-
