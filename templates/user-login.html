@@ -15,8 +15,10 @@
 {% block content %}
 <main>
     <legend class="border-bottom mb-4">Welcome to the Idea Land!</legend>
-    
-    <a class="btn btn-outline-primary" href="{% url 'social:begin' 'google-oauth2' %}">Login with google</a>
+    <div class="social-login col-md-4 p-0">
+    <a class="btn btn-block btn-outline-primary" href="{% url 'social:begin' 'google-oauth2' %}">Login with google</a>
+    <a class="btn btn-block btn-outline-primary mt-3 disabled cursor-not-allowed">Login with Facebook</a>
+    </div>
     <div class="my-3 bg-danger text-white rounded">
         {% if request.method == "POST" %}
         <div class="p-3">{{ form.errors }}</div>
