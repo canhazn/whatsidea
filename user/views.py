@@ -33,7 +33,8 @@ def register(request):
     if request.method == "POST":
         if form.is_valid():
             user = form.save()
-            loginMethod(request, user)
+            loginMethod(request, user,
+                        backend='django.contrib.auth.backends.ModelBackend')
             return redirect("home-page")
 
     return render(request, 'user/user-register.html', {
