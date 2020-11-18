@@ -14,7 +14,7 @@ class Profile(models.Model):
 
 
 class Idea(models.Model):
-    user = models.ManyToManyField(User)
+    founder = models.ManyToManyField(User)
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True)
     problem = models.TextField()
