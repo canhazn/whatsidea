@@ -27,8 +27,9 @@
             {% if idea %}
 
             <nav class="navbar px-0 justify-content-start">
-                {% for user in idea.user.all %}
-                <a href="{% url 'user-detail-page' user %}">@{{ user }}</a>
+                <strong>Founder:&nbsp</strong>
+                {% for user in idea.founder.all %}
+                <a href="{% url 'user-detail-page' user %}">{{ user.username }}</a>                
                 {% if not forloop.last %}
                 <span>,&nbsp</span>
                 {% endif %}
@@ -113,7 +114,7 @@
                                 </svg>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                {% for owner in idea.user.all %}
+                                {% for owner in idea.founder.all %}
                                 {% if user == owner  %}
                                 <a class="dropdown-item cursor-pointer" data-toggle="modal"
                                     data-target="#edit-model-{{post.id}}">Edit</a>
