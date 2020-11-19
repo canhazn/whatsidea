@@ -72,17 +72,14 @@
                                         </svg>
                                     </a>
                                     <span class='ml-3'>{{ idea.contribution_set.all.count }}</span>
-                                </div>
-                                
-                                
+                                </div>                                                             
                                 <div>
-
                                     <a href="{% url 'idea-detail-page' idea.slug %}">
                                         @{{ idea.slug }}
                                     </a>
                                 </div>
                             </nav>
-                        </div>
+                        </div>                   
                     </div>
                     {% endfor %}
 
