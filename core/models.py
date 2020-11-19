@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=30, blank=True)
     phone = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
 
@@ -45,8 +44,10 @@ class Post(models.Model):
 
 
 class Contribution(models.Model):
-    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, null=True, blank=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
+    idea = models.ForeignKey(
+        Idea, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     parent = models.ForeignKey(
         "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)

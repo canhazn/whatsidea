@@ -23,7 +23,12 @@ class VoteAdmin(admin.ModelAdmin):
     list_display = ['user', 'idea', 'date_created']
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'phone', 'bio', 'birth_date']
+
+
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Contribution, ContributionAdmin)
 admin.site.register(models.Vote, VoteAdmin)
+admin.site.register(models.Profile, ProfileAdmin)
