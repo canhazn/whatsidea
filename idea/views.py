@@ -9,7 +9,7 @@ def idea_create(request):
         form = forms.IdeaForm(data=request.POST)
         if form.is_valid():
             idea = form.save()
-            idea.user.add(request.user)
+            idea.founder.add(request.user)
             return redirect("idea-detail-page", slug=idea.slug)
 
     context = {

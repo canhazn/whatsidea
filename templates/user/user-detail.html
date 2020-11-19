@@ -50,7 +50,7 @@
         Ideas:
         <ul>
             {% for idea in user.idea_set.all %}
-            <li>{{ idea }} <br></li>
+            <li><a href="{% url 'idea-detail-page' idea.slug %}">{{ idea }}</a><br></li>
             {% endfor %}
         </ul>
     </div>

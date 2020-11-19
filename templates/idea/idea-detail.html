@@ -52,7 +52,7 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
 
-                {% if user in idea.user.all  %}
+                {% if user in idea.founder.all  %}
                 <a class="dropdown-item" href="{% url 'idea-update-page' idea.slug %}">Edit</a>
                 <a class="dropdown-item" href="{% url 'idea-delete-page' idea.slug %}">Delete</a>
                 {% else %}
