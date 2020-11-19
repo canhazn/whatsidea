@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'idea/idea-base.html' %}
 {%load static %}
 {% load crispy_forms_tags %}
 
@@ -11,7 +11,7 @@
 
 
 <!-- Content here -->
-{% block content %}
+{% block main-content %}
 <style> 
     img {
         width: 120px;
@@ -35,11 +35,10 @@
             {{ form | crispy }}
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-
     </div>
 
 
 
 </main>
 
-{% endblock content %}
+{% endblock main-content %}
