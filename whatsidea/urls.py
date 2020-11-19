@@ -24,5 +24,6 @@ urlpatterns = [
     path('idea/', include('idea.urls')),
     path('post/', include('post.urls')),
     path('vote/', include('vote.urls')),
-    path('contribution/', include('contribution.urls'))
+    path('contribution/', include('contribution.urls')),
+    path('comment/', include('comment.urls'))
 ]

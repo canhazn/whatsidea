@@ -18,7 +18,7 @@ def comment_create(request):
         parent = None
 
     post = models.Post.objects.get(id=post_id)
-    models.Commnet.objects.create(user=request.user,
+    models.Comment.objects.create(user=request.user,
                                   post=post,
                                   parent=parent,
                                   content=content)
