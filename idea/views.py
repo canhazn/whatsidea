@@ -63,3 +63,4 @@ def idea_detail(request, slug):
         "contributions": contributions
     }
     return render(request, "idea/idea-detail.html", context)
+

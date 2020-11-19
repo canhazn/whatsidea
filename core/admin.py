@@ -23,7 +23,12 @@ class VoteAdmin(admin.ModelAdmin):
     list_display = ['user', 'idea', 'date_created']
 
 
+class commentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post', 'content', 'parent']
+
+
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Contribution, ContributionAdmin)
 admin.site.register(models.Vote, VoteAdmin)
+admin.site.register(models.Comment, commentAdmin)
