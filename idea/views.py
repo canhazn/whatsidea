@@ -1,20 +1,34 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from core import models, forms
+from django.utils.text import slugify
+import json
 
 
 @login_required()
 def idea_create(request):
-    if request.method == "POST":
-        form = forms.IdeaForm(data=request.POST)
-        if form.is_valid():
-            idea = form.save()
-            idea.founder.add(request.user)
-            return redirect("idea-detail-page", slug=idea.slug)
 
+    # title = data["title"]
+    # problem = data["problem"]
+    # solution = daat["solution"]
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print("Data: ", request.body)
+        print("Body: ", request.body)
+        print("Post: ", request.POST)
+        form = forms.IdeaCreateForm(data=request.POST)
+        if form.is_valid():
+            idea = form.save(commit=False)
+            idea.slug = slugify(idea.title)
+            idea.save()
+            idea.founder.add(request.user)
+            print(idea)
+            return redirect("idea-detail-page", slug=idea.slug)
+        else:
+            print(form.errors)
     context = {
-        "form": forms.IdeaForm,
-        "post_form": forms.PostForm 
+        "form": forms.IdeaCreateForm
     }
 
     return render(request, "idea/idea-create.html", context)
@@ -55,8 +69,8 @@ def idea_delete(request, slug):
 
 
 def idea_detail(request, slug):
-    idea = get_object_or_404(models.Idea, slug=slug)    
-    contributions = idea.contribution_set.filter(parent__isnull=True)    
+    idea = get_object_or_404(models.Idea, slug=slug)
+    contributions = idea.contribution_set.filter(parent__isnull=True)
 
     context = {
         "idea": idea,

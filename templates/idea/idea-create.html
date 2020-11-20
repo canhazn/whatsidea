@@ -6,13 +6,14 @@
 {% block extrahead %}
 <title>whatsIdea</title>
 <meta name="description" content="">
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
 {% endblock extrahead %}
 
 
 
 <!-- Content here -->
 {% block main-content %}
-<style> 
+<style>
     img {
         width: 120px;
     }
@@ -21,7 +22,7 @@
 <main>
 
     <div class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left d-flex align-items-center">
-        <img src="/static/img/say-hi.png" alt="">
+        <img src="/static/img/bring.png" alt="">
         <div>
             <span>Let's Bring Your Idea</span>
             <br>
@@ -32,14 +33,81 @@
     <div class="form-group my-3">
         <form method="POST">
             {% csrf_token %}
-            {{ form | crispy }}
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Title" required>
+            </div>
+            <div class="form-group">
+                <label for="title">Problem</label>
+                <textarea class="form-control" name="problem" placeholder="Problem" required></textarea>
+
+            </div>
+            <div class="form-group">
+                <label for="title">Solution</label>
+                <div class="border p-3">
+                    <div id="editorjs"></div>
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
     </div>
-
-
-
 </main>
+
+<script>
+    const editor = new EditorJS({
+        /**
+         * Id of Element that should contain the Editor
+         */
+        holderId: 'editorjs',
+
+        /**
+         * Available Tools list.
+         * Pass Tool's class or Settings object for each Tool you want to use
+         */
+
+        /**
+         * Previously saved data that should be rendered
+         */
+        data: {}
+    });
+
+    $('form').submit(function (event) {
+        event.preventDefault();
+        let data = $("form").serializeJSON();
+        let description = "";
+        editor.save().then((outputData) => {
+            description = JSON.stringify(outputData)
+            console.log(description)
+            create_idea(data.title, data.problem, description)
+
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
+    })
+
+    function create_idea(title, problem, solution) {        
+        data = JSON.stringify({
+            "title": title,
+            "problem": problem,
+            "solution": solution
+        })
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'idea-create-page' %}",
+            type: "POST",
+            data: data,
+            success: function (res) {
+                // console.log(res)
+            },
+            error: (res) => {
+                // console.log(res)
+            }
+        })
+    }
+</script>
 
 {% endblock main-content %}
