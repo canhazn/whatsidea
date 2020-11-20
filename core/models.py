@@ -41,6 +41,9 @@ class Idea(models.Model):
     def __str__(self):
         return str(self.title)
 
+    class Meta:
+        ordering = ["-date_created"]
+
 
 class Post(models.Model):
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE)

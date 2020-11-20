@@ -6,6 +6,7 @@
 {% block extrahead %}
 <title>whatsIdea</title>
 <meta name="description" content="">
+<script src="https://unpkg.com/json5@^2.0.0/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
 {% endblock extrahead %}
 
@@ -56,42 +57,32 @@
 
 <script>
     const editor = new EditorJS({
-        /**
-         * Id of Element that should contain the Editor
-         */
+        placeholder: 'Let`s write an awesome story!',
         holderId: 'editorjs',
-
-        /**
-         * Available Tools list.
-         * Pass Tool's class or Settings object for each Tool you want to use
-         */
-
-        /**
-         * Previously saved data that should be rendered
-         */
+        minHeight: '100',
         data: {}
     });
 
     $('form').submit(function (event) {
         event.preventDefault();
         let data = $("form").serializeJSON();
-        let description = "";
+        let solution = "";
         editor.save().then((outputData) => {
-            description = JSON.stringify(outputData)
-            console.log(description)
-            create_idea(data.title, data.problem, description)
-
+            solution = JSON.stringify(outputData)
+            create_idea(data.title, data.problem, solution)
+            
         }).catch((error) => {
             console.log('Saving failed: ', error)
         });
     })
-
+    
     function create_idea(title, problem, solution) {        
         data = JSON.stringify({
             "title": title,
             "problem": problem,
             "solution": solution
-        })
+        })        
+        console.log(data)
         $.ajax({
             headers: {
                 "Content-Type": "application/json",

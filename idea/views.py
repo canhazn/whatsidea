@@ -2,33 +2,33 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from core import models, forms
 from django.utils.text import slugify
+from django.http import JsonResponse
 import json
 
 
 @login_required()
 def idea_create(request):
 
-    # title = data["title"]
-    # problem = data["problem"]
-    # solution = daat["solution"]
-
     if request.method == "POST":
         data = json.loads(request.body)
-        print("Data: ", request.body)
-        print("Body: ", request.body)
-        print("Post: ", request.POST)
-        form = forms.IdeaCreateForm(data=request.POST)
-        if form.is_valid():
-            idea = form.save(commit=False)
-            idea.slug = slugify(idea.title)
-            idea.save()
-            idea.founder.add(request.user)
-            print(idea)
-            return redirect("idea-detail-page", slug=idea.slug)
-        else:
-            print(form.errors)
+        title = data["title"]
+        problem = data["problem"]
+        solution = data["solution"]
+        slug = slugify(title)
+
+        idea = models.Idea.objects.create(            
+            title=title,
+            problem=problem,
+            solution=solution,
+            slug=slug
+        )
+        
+        idea.founder.add(request.user)
+        
+        return JsonResponse({"message": "idea created"})
+
     context = {
-        "form": forms.IdeaCreateForm
+        "form": forms.IdeaCreateForm()
     }
 
     return render(request, "idea/idea-create.html", context)
