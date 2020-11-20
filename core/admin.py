@@ -24,7 +24,7 @@ class VoteAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'phone', 'bio', 'birth_date']
+    list_display = ['user', 'phone', 'bio']
 
 
 admin.site.register(models.Idea, IdeaAdmin)

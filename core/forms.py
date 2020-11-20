@@ -22,6 +22,12 @@ class UserEditForm(UserChangeForm):
                   'email']
 
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.Profile
+        fields = ['bio', 'phone']
+
+
 class IdeaForm(forms.ModelForm):
     class Meta:
         model = models.Idea

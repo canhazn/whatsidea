@@ -4,6 +4,7 @@ from core import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as loginMethod
+from django.contrib import messages
 
 
 def login(request):
@@ -59,18 +60,24 @@ def user_detail(request, username):
     return render(request, 'user/user-detail.html', context)
 
 
+@login_required()
 def user_edit(request, username):
 
     if request.method == "POST":
-        form = forms.UserEditForm(request.POST, instance=request.user)
-        if form.is_valid():
-            user = form.save()
+        user_form = forms.UserEditForm(request.POST, instance=request.user)
+        profile_form = forms.ProfileForm(
+            request.POST, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
             return redirect("user-detail-page", user.username)
-        return render(request, 'user/user-edit.html', {
-            'form': form
-        })
+        else:
+            messages.error(request, 'Please correct the error below.')
     else:
-        form = forms.UserEditForm(instance=request.user)
-        return render(request, 'user/user-edit.html', {
-            'form': form
-        })
+        user_form = forms.UserEditForm(instance=request.user)
+        profile_form = forms.ProfileForm(instance=request.user.profile)
+
+    return render(request, 'user/user-edit.html', {
+        'user_form': user_form,
+        "profile_form": profile_form
+    })
