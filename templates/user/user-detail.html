@@ -37,11 +37,12 @@
 
 
     <div class="user-profile mt-3">
+        <p class="pl-3">{{ user.profile.bio }}</p>
         <ul>
             <li>First name: {{ user.first_name }}</li>
             <li>Last name: {{ user.last_name }}</li>
             <li>Email: {{ user.email }}</li>
-            <li>Phone: {{ user.phone }}</li>
+            <li>Phone: {{ user.profile.phone }}</li>
         </ul>
     </div>
 

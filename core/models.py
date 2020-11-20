@@ -1,16 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
-    location = models.CharField(max_length=30, blank=True)
     phone = models.CharField(max_length=30, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 
 class Idea(models.Model):
@@ -45,13 +56,28 @@ class Post(models.Model):
 
 
 class Contribution(models.Model):
-    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, null=True, blank=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
+    idea = models.ForeignKey(
+        Idea, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     parent = models.ForeignKey(
         "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
     content = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.content)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    content = models.TextField()
+    date_create = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey(
+        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.content)
