@@ -16,15 +16,27 @@ def idea_create(request):
         solution = data["solution"]
         slug = slugify(title)
 
-        idea = models.Idea.objects.create(            
-            title=title,
-            problem=problem,
-            solution=solution,
-            slug=slug
-        )
-        
+        from django.db.utils import IntegrityError
+        try:
+            idea = models.Idea.objects.create(
+                title=title,
+                problem=problem,
+                solution=solution,
+                slug=slug
+            )            
+        except IntegrityError:
+            import uuid
+            new_slug = "%s-%s" %(slug, uuid.uuid1())
+            idea = models.Idea.objects.create(
+                title=title,
+                problem=problem,
+                solution=solution,
+                slug=new_slug
+            )
+
         idea.founder.add(request.user)
-        
+        print(idea)
+
         return JsonResponse({"message": "idea created"})
 
     context = {
@@ -40,12 +52,12 @@ def idea_update(request, slug):
     idea = get_object_or_404(models.Idea, slug=slug)
 
     if request.method == "POST":
-        idea_form = forms.IdeaForm(request.POST, instance=idea)
+        idea_form = forms.IdeaEditForm(request.POST, instance=idea)
         if idea_form.is_valid():
             idea_form.save()
             return redirect("idea-detail-page", slug=idea.slug)
     else:
-        idea_form = forms.IdeaForm(instance=idea)
+        idea_form = forms.IdeaEditForm(instance=idea)
 
     context = {
         "form": idea_form

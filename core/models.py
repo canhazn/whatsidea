@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 
 class Profile(models.Model):
@@ -27,9 +28,9 @@ def save_user_profile(sender, instance, **kwargs):
 class Idea(models.Model):
     founder = models.ManyToManyField(User)
     title = models.CharField(max_length=500)
-    slug = models.SlugField(max_length=500, unique=True)
-    problem = models.TextField()
-    solution = models.TextField()
+    slug = models.SlugField(max_length=500, unique=True, default=uuid.uuid1)
+    problem = models.TextField(blank=True)
+    solution = models.TextField(blank=True, default="Have no Idea!")
     is_publish = models.BooleanField(default=True)
     is_success = models.BooleanField(default=False)
     address = models.CharField(max_length=200, blank=True)

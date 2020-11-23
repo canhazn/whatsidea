@@ -35,16 +35,16 @@
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
-                <label for="title">Title</label>
+                <label for="title">Title *</label>
                 <input type="text" class="form-control" name="title" id="title" placeholder="Title" required>
             </div>
             <div class="form-group">
                 <label for="title">Problem</label>
-                <textarea class="form-control" name="problem" placeholder="Problem" required></textarea>
+                <textarea class="form-control" name="problem" placeholder="Problem"></textarea>
 
             </div>
             <div class="form-group">
-                <label for="title">Solution</label>
+                <label for="title">Solution *</label>
                 <div class="border p-3">
                     <div id="editorjs"></div>
                 </div>
