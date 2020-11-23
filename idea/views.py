@@ -4,6 +4,7 @@ from core import models, forms
 from django.utils.text import slugify
 from django.http import JsonResponse
 import json
+from django.core import serializers
 
 
 @login_required()
@@ -23,10 +24,10 @@ def idea_create(request):
                 problem=problem,
                 solution=solution,
                 slug=slug
-            )            
+            )
         except IntegrityError:
             import uuid
-            new_slug = "%s-%s" %(slug, uuid.uuid1())
+            new_slug = "%s-%s" % (slug, uuid.uuid1())
             idea = models.Idea.objects.create(
                 title=title,
                 problem=problem,
@@ -35,9 +36,12 @@ def idea_create(request):
             )
 
         idea.founder.add(request.user)
-        print(idea)
+        print(idea.id)
 
-        return JsonResponse({"message": "idea created"})
+        return JsonResponse({
+            "message": "idea created",
+            "idea_slug": idea.slug
+        })
 
     context = {
         "form": forms.IdeaCreateForm()
