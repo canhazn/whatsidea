@@ -3,7 +3,8 @@ from core import models
 
 
 def homePage(request):
-    ideas = models.Idea.objects.all()
+    # ideas = models.Idea.objects.all()
+    ideas = models.Idea.objects.all().order_by('-id')[:5]
     context = {
         "ideas": ideas
     }

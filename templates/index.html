@@ -19,7 +19,6 @@
     img {
         width: 120px;
     }
-  
 </style>
 <div>
     <div class="row">
@@ -47,13 +46,13 @@
 
                 <div>
                     {% for idea in ideas %}
-                    <div class="border p-3 my-3">
+                    <div id="{{ idea.slug }}" class="idea border p-3 my-3" data-idea_slug="{{ idea.slug }}">
                         <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
                         </a>
                         <p>{{ idea.problem }}</p>
-
-                        {{ idea.solution }}
+                        <div class="editorjs" id="editorjs-{{ idea.slug }}" data-solution="{{ idea.solution }}" data-editor_id="editorjs-{{ idea.slug }}">
+                        </div>                        
 
                         <div class="border-top mt-3">
                             <nav class="navbar">
@@ -67,19 +66,22 @@
                                     </a>
                                     <span>{{ idea.vote_set.all.count }}</span>
                                     <a class="navbar-brand mr-0 ml-3" href="">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-left-dots-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                            class="bi bi-chat-left-dots-fill" fill="currentColor"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
                                         </svg>
                                     </a>
                                     <span class='ml-3'>{{ idea.contribution_set.all.count }}</span>
-                                </div>                                                             
+                                </div>
                                 <div>
                                     <a href="{% url 'idea-detail-page' idea.slug %}">
                                         @{{ idea.slug }}
                                     </a>
                                 </div>
                             </nav>
-                        </div>                   
+                        </div>
                     </div>
                     {% endfor %}
 
@@ -94,5 +96,18 @@
     </div>
 </div>
 
+<script>
+    $(".editorjs").each(function () {
+        let current = $(this);
+        console.log(current.data("solution"))
+        let editor = new EditorJS({         
+            readOnly: true,   
+            holderId: current.data("editor_id"),
+            minHeight: '0',
+            data:current.data("solution"),
+        });
+        
+    });
+</script>
 
 {% endblock content %}
