@@ -22,15 +22,16 @@
 </style>
 <div>
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7 p-0 p-md-3">
             <main>
                 <div class="search-area mb-3">
-                    <legend>Find your maatter Idea!</legend>
+                    <legend>
+                        Search for Business Ideas!</legend>
                     <form action="GET">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Search">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                                else.</small>
+                            <small id="emailHelp" class="form-text text-muted">We've been shared {{ idea_count }} ideas
+                            </small>
                         </div>
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
@@ -46,16 +47,17 @@
 
                 <div>
                     {% for idea in ideas %}
-                    <div id="{{ idea.slug }}" class="idea border p-3 my-3" data-idea_slug="{{ idea.slug }}">
+                    <div id="{{ idea.slug }}" class="idea border px-3 py-2 my-3" data-idea_slug="{{ idea.slug }}">
                         <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
                         </a>
                         <p>{{ idea.problem }}</p>
-                        <div class="editorjs" id="editorjs-{{ idea.slug }}" data-solution="{{ idea.solution }}" data-editor_id="editorjs-{{ idea.slug }}">
-                        </div>                        
+                        <div class="editorjs" id="editorjs-{{ idea.slug }}" data-solution="{{ idea.solution }}"
+                            data-editor_id="editorjs-{{ idea.slug }}">
+                        </div>
 
                         <div class="border-top mt-3">
-                            <nav class="navbar">
+                            <nav class="navbar px-0">
                                 <div>
                                     <a class="navbar-brand" href="">
                                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-capslock-fill"
@@ -100,28 +102,28 @@
     $(".editorjs").each(function () {
         let current = $(this);
         console.log(current.data("solution"))
-        let editor = new EditorJS({         
-            readOnly: true,   
-            holderId: current.data("editor_id"),
+        let editor = new EditorJS({
+            readOnly: true,
+            holder: current.data("editor_id"),
             minHeight: '0',
-            data:current.data("solution"),
+            data: current.data("solution"),
             tools: {
-            header: Header,
-            image: {
-                class: ImageTool,
-                config: {
-                    additionalRequestHeaders: {
-                        "X-CSRFToken": csrftoken
-                    },
-                    endpoints: {
-                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
-                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                header: Header,
+                image: {
+                    inlineToolbar: true,
+                    class: ImageTool,
+                    config: {
+                        additionalRequestHeaders: {
+                            "X-CSRFToken": csrftoken
+                        },
+                        endpoints: {
+                            byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
+                            byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                        }
                     }
                 }
-            }
-        },
+            },
         });
-        
     });
 </script>
 

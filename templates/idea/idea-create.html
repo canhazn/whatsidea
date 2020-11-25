@@ -58,7 +58,7 @@
 <script>
     const editor = new EditorJS({
         placeholder: 'Let`s write an awesome story!',
-        holderId: 'editorjs',
+        holder: 'editorjs',
         minHeight: '100',
         data: {},
         tools: {
@@ -73,7 +73,7 @@
                     endpoints: {
                         byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
                         byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                    }
+                    }                    
                 }
             }
         },
