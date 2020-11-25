@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     "social_django",
     'storages',
+    'django_cleanup.apps.CleanupConfig',
 
     'core',
     'idea'
