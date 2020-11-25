@@ -45,8 +45,8 @@
             </div>
             <div class="form-group">
                 <label for="title">Solution *</label>
-                <div class="border p-3">
-                    <div id="editorjs"></div>
+                <div class="border">
+                    <div class="m-3" id="editorjs"></div>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -60,7 +60,23 @@
         placeholder: 'Let`s write an awesome story!',
         holderId: 'editorjs',
         minHeight: '100',
-        data: {}
+        data: {},
+        tools: {
+            header: Header,
+            image: {
+                inlineToolbar: true,
+                class: ImageTool,
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        },
     });
 
     $('form').submit(function (event) {
@@ -70,18 +86,18 @@
         editor.save().then((outputData) => {
             solution = JSON.stringify(outputData)
             create_idea(data.title, data.problem, solution)
-            
+
         }).catch((error) => {
             console.log('Saving failed: ', error)
         });
     })
-    
-    function create_idea(title, problem, solution) {        
+
+    function create_idea(title, problem, solution) {
         data = JSON.stringify({
             "title": title,
             "problem": problem,
             "solution": solution
-        })        
+        })
         console.log(data)
         $.ajax({
             headers: {
@@ -92,7 +108,7 @@
             type: "POST",
             data: data,
             success: function (res) {
-                console.log(res.idea_slug)                
+                console.log(res.idea_slug)
                 window.location.href = `${location.protocol}//{{ request.get_host }}/idea/${res.idea_slug}`
             },
             error: (res) => {

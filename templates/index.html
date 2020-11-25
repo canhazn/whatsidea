@@ -105,6 +105,21 @@
             holderId: current.data("editor_id"),
             minHeight: '0',
             data:current.data("solution"),
+            tools: {
+            header: Header,
+            image: {
+                class: ImageTool,
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        },
         });
         
     });

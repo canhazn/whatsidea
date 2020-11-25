@@ -46,6 +46,15 @@ class Idea(models.Model):
         ordering = ["-date_created"]
 
 
+class Image(models.Model):
+    idea = models.ForeignKey(Idea, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    img_file = models.ImageField(upload_to="image")
+
+    def __str__(self):
+        return str(self.img_file.url)
+
+
 class Post(models.Model):
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)

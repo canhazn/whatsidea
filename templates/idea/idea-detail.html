@@ -9,7 +9,6 @@
 <title>whatsIdea</title>
 <meta name="description" content="">
 <script src="https://unpkg.com/json5@^2.0.0/dist/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
 {% endblock extrahead %}
 
 
@@ -250,11 +249,25 @@
     let idea_solution = `{{ idea.solution | js }}`;
     let solution = JSON5.parse(idea_solution.slice(1, -1))
 
-    const editor = new EditorJS({
+    const editor = new EditorJS({        
         readOnly: true,
         holderId: 'editorjs',
         minHeight: '0',
-        data: solution
+        data: solution,
+        tools: {
+            header: Header,
+            image: {                
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: "http://localhost:8000/image/upload/", // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        },
     });
 
 
