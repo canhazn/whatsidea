@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     "social_django",
+    'storages',
 
     'core',
     'idea'
@@ -156,3 +157,13 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "ced7230060aa56b7c0547d1dd52a853a"  # App Secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "598214999493-ea1qgntdch7b6n1mj0e6n1b8d7lne1ie.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "G0Ie_tNd-L3p8mkF7b7oB5KT"
+
+
+# S3 BUCKETS CONFIG
+# AWS_ACCESS_KEY_ID = 'AKIAUPYV3UWCY6QXBTIJ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'whatsidea'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
