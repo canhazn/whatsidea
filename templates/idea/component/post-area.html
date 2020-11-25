@@ -1,0 +1,400 @@
+{%load static %}
+{% load crispy_forms_tags %}
+{% load load_parent_comment %}
+
+
+<style>
+    img {
+        width: 120px;
+    }
+</style>
+<nav class="navbar px-0 justify-content-start">
+    <strong>Founder:&nbsp</strong>
+    {% for user in idea.founder.all %}
+    <a href="{% url 'user-detail-page' user %}">{{ user.username }}</a>
+    {% if not forloop.last %}
+    <span>,&nbsp</span>
+    {% endif %}
+    {% endfor %}
+</nav>
+
+<!-- Post area ------------>
+<section class="post-area mt-3">
+    <!-- create post area -->
+    <div class="post-create-area">
+        <div class="btn btn-secondary w-100 cursor-pointer d-flex align-items-center" data-toggle="modal"
+            data-target="#exampleModal">
+
+            <img src="/static/img/post.png" alt="" style="width: 120px;">
+
+            <div class="d-inline">
+                <span>Let's update status for</span> <br>
+                <strong> {{ idea.title }}</strong>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="post-form-area" id="post-create-form">
+                            <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
+                            <textarea name="content" class="form-control" placeholder="Content"></textarea>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btn-post-create">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- post list -->
+    {% for post in idea.post_set.all %}
+    <div class="post border px-3 my-3 rounded">
+        <div class="" style="white-space: pre-line;">
+            {{ post.content }}
+        </div>
+        <div class="navbar border-top p-0 mt-3 mb-2">
+            <div class="vote">
+                <a class="navbar-brand mr-0" href="#">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                    </svg>
+                </a>
+                <span>{{ post.vote_set.all.count }}</span>
+
+                <a class="navbar-brand mr-0 ml-3" href="#">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-left-dots-fill"
+                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                    </svg>
+                </a>
+                <span>{{ post.comment_set.all.count }}</span>
+            </div>
+
+            <span>{{ post.date_created | date:"d/m/y H:i" }}</span>
+            <div class="dropup">
+                <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
+                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
+                        </path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    {% for owner in idea.founder.all %}
+                    {% if user == owner  %}
+                    <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                        data-target="#edit-model-{{post.id}}">Edit</a>
+                    <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                        data-target="#confirm-modal-{{post.id}}">Delete</a>
+
+
+                    {% endif %}
+                    {% endfor %}
+                    <a class="dropdown-item cursor-not-allowed" data-toggle="modal" data-target="">Report</a>
+                </div>
+
+                <!-- edit model -->
+                <div class="modal fade" id="edit-model-{{post.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit post</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-post-edit" id="form-post-edit-{{ post.id }}">
+                                    <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
+                                    <textarea name="content" class="form-control" placeholder="Content"
+                                        rows="6">{{ post.content }}</textarea>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary btn-post-update">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- confirm model -->
+                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="confirm-modal-{{post.id}}">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Are you sure to delete this?</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-post-delete"
+                                    data-post_id="{{ post.id }}">Yes</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <section class="comment-area">
+            <div class="comment-area">
+                {% for comment in post.comment_set.all|load_parent_comment %}
+                <div>
+                    <div class="comments mt-3 px-2 border-left-info">
+                        <div class="comment-content">
+                            <p class="m-0"> {{ comment }} </p>
+                        </div>
+                        <div class="p-0">
+                            <div class="mr-3">
+                                <a href="{% url 'user-detail-page' comment.user %}">@{{ comment.user }}</a>
+                                <span>{{ comment.date_created | date:"d/m/y H:i"}}</span>
+                            </div>
+                            <div class="navbar p-0 justify-content-start">
+                                <span class="mr-3">Heart1</span>
+                                <span class="mr-3 btn-reply" data-toggle="collapse"
+                                    data-target="#sub-comment-form-{{ comment.id }}"
+                                    data-comment_id="{{ comment.id }}">Reply</span>
+                                <div class="dropup">
+                                    <span class="mr-3" data-toggle="dropdown">More</span>
+                                    <div class="dropdown-menu dropdown-menu-right">
+
+                                        {% if user == comment.user  %}
+                                        <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                                            data-target="#confirm-delelte-comment-{{comment.id}}">Delete</a>
+                                        {% else %}
+                                        <a class="dropdown-item cursor-not-allowed">Report</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if user == comment.user  %}
+                                <!-- confirm delete comment -->
+                                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+                                    id="confirm-delelte-comment-{{comment.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Are you sure to delete this?</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-comment-delete"
+                                                    data-comment_id="{{ comment.id }}">Yes</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    data-dismiss="modal">No</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for sub in comment.children.all %}
+                    <div class="subs mt-3 ml-3 px-2 border-left-info">
+                        <div class="comment-content">
+                            <p class="m-0 "> {{ sub }}</p>
+                        </div>
+
+                        <div class="">
+                            <div>
+                                <a href="{% url 'user-detail-page' sub.user %}">@{{ sub.user }}</a>
+                                <span>{{ sub.date_created | date:"d/m/y h:i"}}</span>
+                            </div>
+                            <div class="navbar p-0 justify-content-start">
+                                <span class="mr-3">Heart</span>
+                                <span class="mr-3 btn-reply" data-toggle="collapse"
+                                    data-target="#sub-comment-form-{{ comment.id }}"
+                                    data-comment_id="{{ comment.id }}">Reply</span>
+                                <div class="dropup inline-block">
+                                    <span class="mr-3" data-toggle="dropdown">More</span>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        {% if user == sub.user  %}
+                                        <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                                            data-target="#confirm-delelte-comment-{{sub.id}}">Delete</a>
+                                        {% else %}
+                                        <a class="dropdown-item cursor-not-allowed">Report</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if user == sub.user  %}
+                                <!-- confirm delete comment -->
+                                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+                                    id="confirm-delelte-comment-{{sub.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Are you sure to delete this?</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-comment-delete"
+                                                    data-comment_id="{{ sub.id }}">Yes</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    data-dismiss="modal">No</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- form create sub comment -->
+                    <div class="collapse collapse-comment-form mt-3 ml-3 w-auto border-left-secondary"
+                        id="sub-comment-form-{{ comment.id }}">
+                        <form class="input-group create-new-comment-form" data-post_id="{{ post.id }}"
+                            data-parent_id="{{ comment.id }}">
+                            <textarea class="form-control" name="content"
+                                id="textarea-comment-{{ comment.id }}"></textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-create-new-comment"
+                                    type="submit">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="create-parent-comment-area mt-3 pt-3 border-top">
+                    <div>
+                        <div class="mt-3 border-left-secondary">
+                            <form class="input-group create-new-comment-form" data-post_id="{{ post.id }}">
+                                <textarea class="form-control" name="content"></textarea>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary btn-create-new-comment"
+                                        type="submit">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    {% endfor %}
+</section>
+<!-- End post area -------------->
+
+<script>
+    $("#btn-post-create").click(() => {
+        let form = $("#post-create-form").serializeJSON();
+
+        console.log(form);
+        create_post(form.idea_id, form.content);
+    });
+
+    $(".btn-post-delete").click(function () {
+        let post_id = $(this).data("post_id");
+        delete_post(post_id);
+    });
+
+
+    function delete_post(post_id) {
+        data = JSON.stringify({
+            "post_id": post_id
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'post-delete-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result) {
+            console.log(result)
+            window.location.reload()
+        })
+    }
+
+    function create_post(idea_id, content) {
+        data = JSON.stringify({
+            "idea_id": idea_id,
+            "content": content
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'post-create-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result) {
+            console.log(result)
+            window.location.reload()
+        })
+    }
+
+    $(".create-new-comment-form").submit(function (event) {
+        event.preventDefault();
+        let post_id = $(this).data("post_id");
+        let parent_id = $(this).data("parent_id");
+        console.log($(this))
+
+        let form = $(this).serializeJSON();
+        create_comment(post_id, parent_id, form.content);
+    })
+
+    function create_comment(post_id, parent_id, content) {
+        data = JSON.stringify({
+            "post_id": post_id,
+            "parent_id": parent_id,
+            "content": content
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+
+            url: "{% url 'comment-create-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result) {
+            console.log(result)
+            window.location.reload()
+        })
+
+
+    }
+
+    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
+        console.log(this)
+        let textarea = $(this).find("textarea");
+        textarea.focus();
+
+    })
+</script>

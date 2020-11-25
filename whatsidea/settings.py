@@ -40,12 +40,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     "social_django",
+    'storages',
+    'django_cleanup.apps.CleanupConfig',
 
     'core',
+    'idea'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,18 +83,18 @@ WSGI_APPLICATION = 'whatsidea.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'd5n6dclp38mj3o',
-    #     'USER': 'lyfoufbylvvitn',
-    #     'PASSWORD': '77a1e2e615b0eaced726bdfb54527f06ed0c1d18a81228e1214ee74878941ef1',
-    #     'HOST': 'ec2-100-25-100-81.compute-1.amazonaws.com',
-    #     'PORT': '5432'
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd7dhepb54bc30a',
+        'USER': 'ozutnfcjwrwvjg',
+        'PASSWORD': 'a2fecbfc5274cb50bb5c68c349fc9b4dfc974282d154cf11276fa1c9b4dbc2a9',
+        'HOST': 'ec2-52-1-95-247.compute-1.amazonaws.com',
+        'PORT': '5432'
+    }
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -155,3 +159,13 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "ced7230060aa56b7c0547d1dd52a853a"  # App Secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "598214999493-ea1qgntdch7b6n1mj0e6n1b8d7lne1ie.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "G0Ie_tNd-L3p8mkF7b7oB5KT"
+
+
+# S3 BUCKETS CONFIG
+# AWS_ACCESS_KEY_ID = 'AKIAUPYV3UWCY6QXBTIJ'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'whatsidea'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

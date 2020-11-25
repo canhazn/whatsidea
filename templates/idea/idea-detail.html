@@ -1,6 +1,8 @@
 {% extends 'idea/idea-base.html' %}
 {%load static %}
 {% load crispy_forms_tags %}
+{% load js %}
+
 
 <!-- Extra head here -->
 {% block extrahead %}
@@ -67,7 +69,7 @@
         <p>{{ idea.problem }}</p>
     </div>
     <div class="p-3 my-3 border border-left-secondary">
-        <p>{{ idea.solution }}</p>
+        <div id="editorjs"></div>
     </div>
 
     <!-- vote count -->
@@ -243,6 +245,31 @@
 
 
 <script>
+    let idea_solution = `{{ idea.solution | js }}`;
+    let solution = JSON5.parse(idea_solution.slice(1, -1))
+
+    const editor = new EditorJS({
+        readOnly: true,
+        holder: 'editorjs',
+        minHeight: '0',
+        data: solution,
+        tools: {
+            header: Header,
+            image: {
+                class: ImageTool,
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: "http://localhost:8000/image/upload/", // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        },
+    });
+
 
     $(".create-new-contribution-form").submit(function (event) {
         event.preventDefault();

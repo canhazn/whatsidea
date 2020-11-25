@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from whatsidea.views import homePage
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +26,11 @@ urlpatterns = [
     path('idea/', include('idea.urls')),
     path('post/', include('post.urls')),
     path('vote/', include('vote.urls')),
-    path('contribution/', include('contribution.urls'))
+    path('contribution/', include('contribution.urls')),
+    path('comment/', include('comment.urls')),
+    path('image/', include('image.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

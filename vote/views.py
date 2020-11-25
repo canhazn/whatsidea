@@ -12,7 +12,7 @@ def vote(request, slug):
     vote, created = models.Vote.objects.get_or_create(
         user=request.user, idea=idea)
 
-    if not created:        
+    if not created:
         vote.delete()
         return JsonResponse({
             "message": "vote deleted"
@@ -21,5 +21,3 @@ def vote(request, slug):
         return JsonResponse({
             "message": "vote created"
         })
-        
-

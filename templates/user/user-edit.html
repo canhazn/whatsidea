@@ -16,24 +16,21 @@
 <!-- Content here -->
 {% block main-content %}
 <main>
-
-
-
     <div class="my-3 bg-danger text-white rounded">
         {% if request.method == "POST" %}
-            <div class="p-3">{{ form.errors }}</div>
+        <div class="p-3">{{ user_form.errors }}</div>
         {% endif %}
     </div>
+
     <form method="POST">
-        {% csrf_token %}        
+        {% csrf_token %}
         <fieldset class="form-group">
-            {% render_field form.username class="form-control mb-3" placeholder="Username" %}
-            {% render_field form.email class="form-control mb-3" placeholder="Email" %}
-            {% render_field form.first_name class="form-control mb-3" placeholder="First name" %}
-            {% render_field form.last_name class="form-control mb-3" placeholder="Last name" %}
+            {{ user_form | crispy }}
+            {{ profile_form | crispy }}
         </fieldset>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
+
 </main>
 
 {% endblock main-content %}
