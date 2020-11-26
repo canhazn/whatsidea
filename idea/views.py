@@ -15,6 +15,7 @@ def idea_create(request):
         title = data["title"]
         problem = data["problem"]
         solution = data["solution"]
+        description = data["description"]
         slug = slugify(title)
 
         from django.db.utils import IntegrityError
@@ -23,6 +24,7 @@ def idea_create(request):
                 title=title,
                 problem=problem,
                 solution=solution,
+                description=description,
                 slug=slug
             )
         except IntegrityError:
@@ -32,6 +34,7 @@ def idea_create(request):
                 title=title,
                 problem=problem,
                 solution=solution,
+                description=description,
                 slug=new_slug
             )
 

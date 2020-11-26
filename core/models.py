@@ -30,7 +30,8 @@ class Idea(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True, default=uuid.uuid1)
     problem = models.TextField(blank=True)
-    solution = models.TextField(blank=True, default="Have no Idea!")
+    solution = models.TextField(blank=True)
+    description = models.TextField(default="Have no Idea!")
     is_publish = models.BooleanField(default=True)
     is_success = models.BooleanField(default=False)
     address = models.CharField(max_length=200, blank=True)
@@ -47,7 +48,8 @@ class Idea(models.Model):
 
 
 class Image(models.Model):
-    idea = models.ForeignKey(Idea, null=True, blank=True, on_delete=models.CASCADE)
+    idea = models.ForeignKey(
+        Idea, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     img_file = models.ImageField(upload_to="image")
 

@@ -53,7 +53,6 @@
                 </svg>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-
                 {% if user in idea.founder.all  %}
                 <a class="dropdown-item" href="{% url 'idea-update-page' idea.slug %}">Edit</a>
                 <a class="dropdown-item" href="{% url 'idea-delete-page' idea.slug %}">Delete</a>
@@ -64,12 +63,24 @@
             </div>
         </div>
     </nav>
-
+    {% if idea.problem %}
     <div class="p-3 my-3 border border-left-success">
         <p>{{ idea.problem }}</p>
     </div>
+    {% endif %}
+    {% if idea.solution %}
+    <div class="p-3 my-3 border border-left-success">
+        <p>{{ idea.solution }}</p>
+    </div>
+    {% endif %}
     <div class="p-3 my-3 border border-left-secondary">
         <div id="editorjs"></div>
+    </div>
+
+    <!-- facebook share -->
+    <div class="fb-share-area">
+        <div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-width="" data-layout="button_count"
+            data-action="like" data-size="large" data-share="true"></div>
     </div>
 
     <!-- vote count -->
@@ -99,6 +110,7 @@
             </a>
         </div>
 
+        <!-- contribution area -->
         <div class="contribution-area">
             {% for contribution in contributions %}
             <div>
@@ -223,8 +235,6 @@
             {% endfor %}
 
             <div class="create-parent-contribution-area mt-3 pt-3 border-top">
-
-
                 <div>
                     <div class="mt-3 border-left-secondary">
                         <form class="input-group create-new-contribution-form" data-idea_id="{{ idea.id }}">
@@ -245,14 +255,14 @@
 
 
 <script>
-    let idea_solution = `{{ idea.solution | js }}`;
-    let solution = JSON5.parse(idea_solution.slice(1, -1))
+    let idea_description = `{{ idea.description | js }}`;
+    let description = JSON5.parse(idea_description.slice(1, -1))
 
     const editor = new EditorJS({
         readOnly: true,
         holder: 'editorjs',
         minHeight: '0',
-        data: solution,
+        data: description,
         tools: {
             header: Header,
             image: {

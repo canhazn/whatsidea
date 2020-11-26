@@ -38,13 +38,35 @@
                 <label for="title">Title *</label>
                 <input type="text" class="form-control" name="title" id="title" placeholder="Title" required>
             </div>
-            <div class="form-group">
-                <label for="title">Problem</label>
-                <textarea class="form-control" name="problem" placeholder="Problem"></textarea>
+            <div class="accordion mb-3" id="accordionExample">
+                <div class="card">
+                    <div class="card-header border-0 p-0" id="headingOne" data-toggle="collapse"
+                                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" >
+                                Optional fields
+                            </button>
+                        </h2>
+                    </div>
 
+                    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="title">Problem</label>
+                                <textarea class="form-control" name="problem" placeholder="Problem"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Solution</label>
+                                <textarea class="form-control" name="solution" placeholder="Solution"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="form-group">
-                <label for="title">Solution *</label>
+                <label>Description *</label>
                 <div class="border">
                     <div class="m-3" id="editorjs"></div>
                 </div>
@@ -57,7 +79,7 @@
 
 <script>
     const editor = new EditorJS({
-        placeholder: 'Let`s write an awesome story!',
+        placeholder: 'Describe your idea!',
         holder: 'editorjs',
         minHeight: '100',
         data: {},
@@ -73,7 +95,7 @@
                     endpoints: {
                         byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
                         byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                    }                    
+                    }
                 }
             }
         },
@@ -82,21 +104,22 @@
     $('form').submit(function (event) {
         event.preventDefault();
         let data = $("form").serializeJSON();
-        let solution = "";
+        let description = "";
         editor.save().then((outputData) => {
-            solution = JSON.stringify(outputData)
-            create_idea(data.title, data.problem, solution)
+            description = JSON.stringify(outputData)
+            create_idea(data.title, data.problem, data.solution, description)
 
         }).catch((error) => {
             console.log('Saving failed: ', error)
         });
     })
 
-    function create_idea(title, problem, solution) {
+    function create_idea(title, problem, solution, description) {
         data = JSON.stringify({
             "title": title,
             "problem": problem,
-            "solution": solution
+            "solution": solution,
+            "description": description
         })
         console.log(data)
         $.ajax({
