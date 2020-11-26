@@ -24,7 +24,8 @@
     <div class="row">
         <div class="col-md-7 p-0 p-md-3">
             <main>
-                <div class="search-area mb-3">
+
+                <div class="search-area mb-3 mx-3 mx-md-0">
                     <legend>
                         Search for Business Ideas!</legend>
                     <form action="GET">
@@ -36,14 +37,15 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
-
-                <a href="{% url 'idea-create-page' %}"
-                    class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left">
-                    <img src="/static/img/say-hi.png" alt="">
-                    <span>Have</span>
-                    <span>New</span>
-                    <span>Idea</span>
-                </a>
+                <div class=" ">
+                    <a href="{% url 'idea-create-page' %}"
+                        class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left rounded-0">
+                        <img src="/static/img/say-hi.png" alt="">
+                        <span>Have</span>
+                        <span>New</span>
+                        <span>Idea</span>
+                    </a>
+                </div>
 
                 <div>
                     {% for idea in ideas %}
