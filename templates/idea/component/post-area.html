@@ -10,7 +10,7 @@
 </style>
 
 <div class="idea-additional-info py-2">
-    <nav class="navbar p-0 mb-2 justify-content-start">
+    <nav class="navbar p-0 justify-content-start">
         <strong>Founder:&nbsp</strong>
         {% for user in idea.founder.all %}
         <a href="{% url 'user-detail-page' user %}">{{ user.username }}</a>
@@ -19,13 +19,6 @@
         {% endif %}
         {% endfor %}
     </nav>
-
-    {% if idea.website %}
-    <nav class="navbar p-0 justify-content-start">
-        <strong>Website:&nbsp</strong>
-        <a>{{ idea.website }}</a>
-    </nav>
-    {% endif %}
 </div>
 
 <!-- Post area ------------>

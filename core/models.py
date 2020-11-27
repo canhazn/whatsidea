@@ -102,6 +102,7 @@ class Vote(models.Model):
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
+    models.
 
     def __str__(self):
         return "user:%s  idea:%s" % (str(self.user), str(self.idea))
