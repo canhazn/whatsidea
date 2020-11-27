@@ -54,13 +54,13 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="title">Problem</label>
-                                <textarea class="form-control" name="problem" placeholder="Problem"
-                                    value="{{ form.problem.value }}"></textarea>
+                                <textarea class="form-control" name="problem"
+                                    placeholder="Problem">{{ form.problem.value }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="title">Solution</label>
-                                <textarea class="form-control" name="solution" placeholder="Solution"
-                                    value="{{ form.solution.value }}"></textarea>
+                                <textarea class="form-control" name="solution"
+                                    placeholder="Solution">{{ form.solution.value }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="slug">Slug *</label>
@@ -69,20 +69,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="address">Address</label>
-                                <input type="text" class="form-control" name="address" id="address"
-                                    placeholder="Address" required value="{{ form.address.value }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone"
-                                    required value="{{ form.phone.value }}">
-                            </div>
-
-                            <div class="form-group">
                                 <label for="website">Website</label>
                                 <input type="text" class="form-control" name="website" id="website"
-                                    placeholder="Website" required value="{{ form.website.value }}">
+                                    placeholder="Website" value="{{ form.website.value }}">
                             </div>
                         </div>
                     </div>
@@ -124,6 +113,47 @@
             }
         },
     });
+
+    $('form').submit(function (event) {
+        event.preventDefault();
+        let data = $("form").serializeJSON();
+        let description = "";
+        editor.save().then((outputData) => {
+            description = JSON.stringify(outputData)
+            create_idea(data.title, data.problem, data.solution, description, data.slug, data.website)
+
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
+    })
+
+    function create_idea(title, problem, solution, description, slug, website) {
+        data = JSON.stringify({
+            "title": title,
+            "problem": problem,
+            "solution": solution,
+            "description": description,
+            "slug": slug,
+            "website": website
+        })
+        console.log(data)
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'idea-update-page' form.slug.value %}",
+            type: "POST",
+            data: data,
+            success: function (res) {
+                console.log(res.idea_slug)
+                window.location.href = `${location.protocol}//{{ request.get_host }}/idea/${res.idea_slug}`
+            },
+            error: (res) => {
+                // console.log(res)
+            }
+        })
+    }
 </script>
 
 {% endblock main-content %}

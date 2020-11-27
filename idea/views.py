@@ -54,23 +54,77 @@ def idea_create(request):
 
 
 @login_required()
-def idea_update(request, slug):
+def idea_edit(request, pk):
 
-    idea = get_object_or_404(models.Idea, slug=slug)
-
+    print(slug)
+    idea = get_object_or_404(models.Idea, id=pk)
     if request.method == "POST":
-        idea_form = forms.IdeaEditForm(request.POST, instance=idea)
-        if idea_form.is_valid():
-            idea_form.save()
-            return redirect("idea-detail-page", slug=idea.slug)
+        data = json.loads(request.body)
+        idea.title = data["title"]
+        idea.problem = data["problem"]
+        idea.solution = data["solution"]
+        idea.description = data["description"]
+        idea.slug = data["slug"]
+        idea.website = data["website"]
+
+        from django.db.utils import IntegrityError
+        try:
+            idea.save()
+        except IntegrityError:
+            import uuid
+            new_slug = "%s-%s" % (idea.slug, uuid.uuid1())
+            idea.slug = new_slug
+            idea.save()
+
+        return JsonResponse({
+            "message": "idea updated",
+            "idea_slug": idea.slug
+        })
+
     else:
+        idea_form = forms.IdeaEditForm(instance=idea)
         idea_form = forms.IdeaEditForm(instance=idea)
 
     context = {
         "form": idea_form
     }
-
     return render(request, "idea/idea-update.html", context)
+
+
+@login_required()
+def idea_update(request, slug):
+
+    print(slug)
+    idea = get_object_or_404(models.Idea, slug=slug)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        idea.title = data["title"]
+        idea.problem = data["problem"]
+        idea.solution = data["solution"]
+        idea.description = data["description"]
+        idea.slug = data["slug"]
+        idea.website = data["website"]
+
+        from django.db.utils import IntegrityError
+        try:
+            idea.save()
+        except IntegrityError:
+            import uuid
+            new_slug = "%s-%s" % (idea.slug, uuid.uuid1())
+            idea.slug = new_slug
+            idea.save()
+
+        return JsonResponse({
+            "message": "idea updated",
+            "idea_slug": idea.slug
+        })
+
+    else:
+        idea_form = forms.IdeaEditForm(instance=idea)        
+        context = {
+            "form": idea_form
+        }
+        return render(request, "idea/idea-update.html", context)
 
 
 @login_required()

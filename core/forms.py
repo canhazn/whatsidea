@@ -38,7 +38,7 @@ class IdeaEditForm(forms.ModelForm):
     class Meta:
         model = models.Idea
         fields = ["title", "slug", "problem", "solution", "description",
-                  "is_publish", "address", "phone", "website"]
+                  "website"]
 
 
 class PostForm(forms.ModelForm):
