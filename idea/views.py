@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from core import models, forms
+from core import models, forms, decorators
 from django.utils.text import slugify
 from django.http import JsonResponse
 import json
@@ -53,45 +53,9 @@ def idea_create(request):
     return render(request, "idea/idea-create.html", context)
 
 
-@login_required()
-def idea_edit(request, pk):
 
-    print(slug)
-    idea = get_object_or_404(models.Idea, id=pk)
-    if request.method == "POST":
-        data = json.loads(request.body)
-        idea.title = data["title"]
-        idea.problem = data["problem"]
-        idea.solution = data["solution"]
-        idea.description = data["description"]
-        idea.slug = data["slug"]
-        idea.website = data["website"]
-
-        from django.db.utils import IntegrityError
-        try:
-            idea.save()
-        except IntegrityError:
-            import uuid
-            new_slug = "%s-%s" % (idea.slug, uuid.uuid1())
-            idea.slug = new_slug
-            idea.save()
-
-        return JsonResponse({
-            "message": "idea updated",
-            "idea_slug": idea.slug
-        })
-
-    else:
-        idea_form = forms.IdeaEditForm(instance=idea)
-        idea_form = forms.IdeaEditForm(instance=idea)
-
-    context = {
-        "form": idea_form
-    }
-    return render(request, "idea/idea-update.html", context)
-
-
-@login_required()
+@login_required
+@decorators.user_is_founder
 def idea_update(request, slug):
 
     print(slug)
@@ -120,14 +84,15 @@ def idea_update(request, slug):
         })
 
     else:
-        idea_form = forms.IdeaEditForm(instance=idea)        
+        idea_form = forms.IdeaEditForm(instance=idea)
         context = {
             "form": idea_form
         }
         return render(request, "idea/idea-update.html", context)
 
 
-@login_required()
+@login_required
+@decorators.user_is_founder
 def idea_delete(request, slug):
 
     idea = get_object_or_404(models.Idea, slug=slug)
