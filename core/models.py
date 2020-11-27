@@ -50,6 +50,7 @@ class Image(models.Model):
     idea = models.ForeignKey(
         Idea, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
     img_file = models.ImageField(upload_to="image")
 
     def __str__(self):

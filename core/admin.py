@@ -31,9 +31,14 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'phone', 'bio']
 
 
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['user', "date_created"]
+
+
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Contribution, ContributionAdmin)
 admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Profile, ProfileAdmin)
+admin.site.register(models.Image, ImageAdmin)
