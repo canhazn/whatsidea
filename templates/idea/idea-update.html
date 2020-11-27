@@ -5,14 +5,14 @@
 <!-- Extra head here -->
 {% block extrahead %}
 <title>whatsIdea</title>
-<meta name="description" content="">
+<meta name="content" content="">
 {% endblock extrahead %}
 
 
 
 <!-- Content here -->
 {% block main-content %}
-<style> 
+<style>
     img {
         width: 120px;
     }
@@ -21,7 +21,7 @@
 <main>
 
     <div class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left d-flex align-items-center">
-        <img src="/static/img/say-hi.png" alt="">
+        <img src="/static/img/edit.png" alt="">
         <div>
             <span>Let's Bring Your Idea</span>
             <br>
@@ -32,13 +32,122 @@
     <div class="form-group my-3">
         <form method="POST">
             {% csrf_token %}
-            {{ form | crispy }}
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Title" required
+                    value="{{ form.title.value }}">
+            </div>
+
+            <div class="accordion mb-3" id="accordionExample">
+                <div class="card">
+                    <div class="card-header border-0 p-0" id="headingOne" data-toggle="collapse"
+                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button">
+                                Optional fields
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                        data-parent="#accordionExample">
+                        <div class="card-body">                          
+                            <div class="form-group">
+                                <label for="title">Short description</label>
+                                <textarea class="form-control" name= "shortdesc"
+                                    placeholder="Short description">{{ form.shortdesc.value }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="slug">Slug *</label>
+                                <input type="text" class="form-control" name="slug" id="slug" placeholder="Slug"
+                                    required value="{{ form.slug.value }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="text" class="form-control" name="website" id="website"
+                                    placeholder="Website" value="{{ form.website.value }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>The Business Idea: </label>
+                <div class="border">
+                    <div class="m-3" id="editorjs" data-content="{{ form.content.value }}"></div>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-
-
-
 </main>
+
+<script>
+    let current = $("#editorjs");
+    let editor = new EditorJS({
+        holder: "editorjs",
+        minHeight: '100',
+        data: current.data("content"),
+        tools: {
+            header: Header,
+            image: {
+                inlineToolbar: true,
+                class: ImageTool,
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        },
+    });
+
+    $('form').submit(function (event) {
+        event.preventDefault();
+        let data = $("form").serializeJSON();
+        let content = "";
+        editor.save().then((outputData) => {
+            content = JSON.stringify(outputData)
+            create_idea(data.title, data.shortdesc, content, data.slug, data.website)
+
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
+    })
+
+    function create_idea(title, shortdesc, content, slug, website) {
+        data = JSON.stringify({
+            "title": title,           
+             "shortdesc": shortdesc,
+            "content": content,
+            "slug": slug,
+            "website": website
+        })
+        console.log(data)
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'idea-update-page' form.slug.value %}",
+            type: "POST",
+            data: data,
+            success: function (res) {
+                console.log(res.idea_slug)
+                window.location.href = `${location.protocol}//{{ request.get_host }}/idea/${res.idea_slug}`
+            },
+            error: (res) => {
+                // console.log(res)
+            }
+        })
+    }
+</script>
 
 {% endblock main-content %}

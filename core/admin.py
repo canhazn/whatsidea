@@ -8,7 +8,7 @@ class IdeaAdmin(admin.ModelAdmin):
     def get_owners(self, obj):
         return ",".join([str(user) for user in obj.founder.all()])
 
-    get_owners.short_description = "owner"
+    get_owners.short_content = "owner"
 
 
 class PostAdmin(admin.ModelAdmin):

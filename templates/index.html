@@ -4,7 +4,7 @@
 <!-- Extra head here -->
 {% block extrahead %}
 <title>whatsIdea</title>
-<meta name="description" content="">
+<meta name="content" content="">
 {% endblock extrahead %}
 
 
@@ -24,7 +24,8 @@
     <div class="row">
         <div class="col-md-7 p-0 p-md-3">
             <main>
-                <div class="search-area mb-3">
+
+                <div class="search-area mb-3 mx-3 mx-md-0">
                     <legend>
                         Search for Business Ideas!</legend>
                     <form action="GET">
@@ -36,24 +37,32 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
-
-                <a href="{% url 'idea-create-page' %}"
-                    class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left">
-                    <img src="/static/img/say-hi.png" alt="">
-                    <span>Have</span>
-                    <span>New</span>
-                    <span>Idea</span>
-                </a>
+                <div class=" ">
+                    <a href="{% url 'idea-create-page' %}"
+                        class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left rounded-0">
+                        <img src="/static/img/say-hi.png" alt="">
+                        <span>Have</span>
+                        <span>New</span>
+                        <span>Idea</span>
+                    </a>
+                </div>
 
                 <div>
                     {% for idea in ideas %}
                     <div id="{{ idea.slug }}" class="idea border px-3 py-2 my-3" data-idea_slug="{{ idea.slug }}">
-                        <a href="{% url 'idea-detail-page' idea.slug %}">
+                        {% comment %} <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
-                        </a>
-                        <p>{{ idea.problem }}</p>
-                        <div class="editorjs" id="editorjs-{{ idea.slug }}" data-solution="{{ idea.solution }}"
-                            data-editor_id="editorjs-{{ idea.slug }}">
+                        </a> {% endcomment %}
+                    
+                        <p>{{ idea.shortdesc }}</p>                        
+
+                        {% comment %} {% if idea.shortdesc %}
+                        <div class="p-3 my-3 border border-left-success">
+                        </div>
+                        {% endif %}
+                        {% endcomment %}
+                        <div class="editorjs p-3 my-3 border border-left-secondary" id="editorjs-{{ idea.slug }}"
+                            data-content="{{ idea.content }}" data-editor_id="editorjs-{{ idea.slug }}">
                         </div>
 
                         <div class="border-top mt-3">
@@ -101,12 +110,12 @@
 <script>
     $(".editorjs").each(function () {
         let current = $(this);
-        console.log(current.data("solution"))
+        console.log(current.data("content"))
         let editor = new EditorJS({
             readOnly: true,
             holder: current.data("editor_id"),
             minHeight: '0',
-            data: current.data("solution"),
+            data: current.data("content"),
             tools: {
                 header: Header,
                 image: {

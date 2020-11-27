@@ -32,7 +32,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
-    <script data-ad-client="ca-pub-7388797242931600" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script data-ad-client="ca-pub-7388797242931600" async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body>
@@ -47,6 +48,37 @@
 
         .codex-editor__redactor {
             margin: 0 !important;
+        }
+
+        .idea-slug {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .border-left-primary {
+            border-left: .25rem solid #4e73df !important;
+            border-radius: .35rem;
+        }
+
+        .border-left-success {
+            border-left: .25rem solid #1cc88a !important;
+            border-radius: .35rem;
+        }
+
+        .border-left-info {
+            border-left: .25rem solid #17A2B8 !important;
+            border-radius: .35rem;
+        }
+
+        .border-left-secondary {
+            border-left: .25rem solid #6c757d !important;
+            border-radius: .35rem;
+        }
+
+        .border-left-dark {
+            border-left: .25rem solid #343a40 !important;
+            border-radius: .35rem;
         }
     </style>
 
@@ -76,7 +108,9 @@
         {% endblock %}
     </main>
 
-
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v9.0"
+        nonce="0QjEi0v1"></script>
 </body>
 
 </html>

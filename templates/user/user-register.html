@@ -8,7 +8,7 @@
 <!-- Extra head here -->
 {% block extrahead %}
 <title>whatsIdea</title>
-<meta name="description" content="">
+<meta name="content" content="">
 {% endblock extrahead %}
 
 
@@ -18,25 +18,39 @@
 <main>
     <legend class="border-bottom mb-4">Welcome to the Idea Land!</legend>
 
-    <div class="social-login col-md-4 p-0">
-        <a class="btn btn-block btn-outline-primary" href="{% url 'social:begin' 'google-oauth2' %}">Register with
-            google</a>
-        <a class="btn btn-block btn-outline-primary mt-3 disabled" disabled>Register with Facebook</a>
+    <div class="social-login pb-3 border-bottom">
+        <a class="btn btn-block btn-outline-primary w-100" href="{% url 'social:begin' 'google-oauth2' %}">Register with
+            Google</a>
+        <a class="btn btn-block btn-outline-primary w-100 mt-3 disabled cursor-not-allowed">Register with Facebook</a>
     </div>
+
     <div class="my-3 bg-danger text-white rounded">
         {% if request.method == "POST" %}
         <div class="p-3">{{ form.errors }}</div>
         {% endif %}
     </div>
     <form method="POST">
+        <p class="h5">Register with your acount:</p>
         {% csrf_token %}
-        <fieldset class="form-group">
-            {% render_field form.username class="form-control mb-3" placeholder="Username" %}
-            {% render_field form.email class="form-control mb-3" placeholder="Email" %}
-            {% render_field form.password1 class="form-control mb-3" placeholder="Password" %}
-            {% render_field form.password2 class="form-control mb-3" placeholder="Confirm password" %}
-        </fieldset>
-        <button type="submit" class="btn btn-primary">Register</button>
+        {{ form | crispy }}
+        {% comment %} <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <label for="password1">Password:</label>
+            <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm password:</label>
+            <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm password"
+                required>
+        </div> {% endcomment %}
+        <button type="submit" class="btn btn-primary w-100">Register</button>
     </form>
 
     <div class="border-top mt-3 pt-3">

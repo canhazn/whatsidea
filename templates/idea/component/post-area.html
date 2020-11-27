@@ -8,18 +8,22 @@
         width: 120px;
     }
 </style>
-<nav class="navbar px-0 justify-content-start">
-    <strong>Founder:&nbsp</strong>
-    {% for user in idea.founder.all %}
-    <a href="{% url 'user-detail-page' user %}">{{ user.username }}</a>
-    {% if not forloop.last %}
-    <span>,&nbsp</span>
-    {% endif %}
-    {% endfor %}
-</nav>
+
+<div class="idea-additional-info py-2">
+    <nav class="navbar p-0 justify-content-start">
+        <strong>Founder:&nbsp</strong>
+        {% for user in idea.founder.all %}
+        <a href="{% url 'user-detail-page' user %}">{{ user.username }}</a>
+        {% if not forloop.last %}
+        <span>,&nbsp</span>
+        {% endif %}
+        {% endfor %}
+    </nav>
+</div>
 
 <!-- Post area ------------>
 <section class="post-area mt-3">
+    {% if request.user in idea.founder.all %}
     <!-- create post area -->
     <div class="post-create-area">
         <div class="btn btn-secondary w-100 cursor-pointer d-flex align-items-center" data-toggle="modal"
@@ -57,7 +61,18 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="btn btn-secondary w-100 cursor-pointer d-flex align-items-center" data-toggle="modal"
+        data-target="#exampleModal">
 
+        <img src="/static/img/subscribe.png" alt="" style="width: 120px;">
+
+        <div class="d-inline">
+            <span>Subscribe for lastest new from</span> <br>
+            <strong> {{ idea.title }}</strong>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- post list -->
     {% for post in idea.post_set.all %}
@@ -86,7 +101,7 @@
                 <span>{{ post.comment_set.all.count }}</span>
             </div>
 
-            <span>{{ post.date_created | date:"d/m/y H:i" }}</span>
+            {% comment %} <span>{{ post.date_created | date:"d/m/y H:i" }}</span> {% endcomment %}
             <div class="dropup">
                 <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -104,8 +119,6 @@
                         data-target="#edit-model-{{post.id}}">Edit</a>
                     <a class="dropdown-item cursor-pointer" data-toggle="modal"
                         data-target="#confirm-modal-{{post.id}}">Delete</a>
-
-
                     {% endif %}
                     {% endfor %}
                     <a class="dropdown-item cursor-not-allowed" data-toggle="modal" data-target="">Report</a>
@@ -157,7 +170,9 @@
 
             </div>
         </div>
-        <section class="comment-area">
+
+        <!-- comment area -->
+        <section class="comment-area mb-3">
             <div class="comment-area">
                 {% for comment in post.comment_set.all|load_parent_comment %}
                 <div>

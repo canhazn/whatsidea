@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from core import models, forms
+from core import models, forms, decorators
 from django.utils.text import slugify
 from django.http import JsonResponse
 import json
@@ -13,16 +13,16 @@ def idea_create(request):
     if request.method == "POST":
         data = json.loads(request.body)
         title = data["title"]
-        problem = data["problem"]
-        solution = data["solution"]
+        shortdesc = data["shortdesc"]
+        content = data["content"]
         slug = slugify(title)
 
         from django.db.utils import IntegrityError
         try:
             idea = models.Idea.objects.create(
                 title=title,
-                problem=problem,
-                solution=solution,
+                shortdesc=shortdesc,
+                content=content,
                 slug=slug
             )
         except IntegrityError:
@@ -30,8 +30,8 @@ def idea_create(request):
             new_slug = "%s-%s" % (slug, uuid.uuid1())
             idea = models.Idea.objects.create(
                 title=title,
-                problem=problem,
-                solution=solution,
+                shortdesc=shortdesc,
+                content=content,
                 slug=new_slug
             )
 
@@ -50,27 +50,44 @@ def idea_create(request):
     return render(request, "idea/idea-create.html", context)
 
 
-@login_required()
+@login_required
+@decorators.user_is_founder
 def idea_update(request, slug):
 
+    print(slug)
     idea = get_object_or_404(models.Idea, slug=slug)
-
     if request.method == "POST":
-        idea_form = forms.IdeaEditForm(request.POST, instance=idea)
-        if idea_form.is_valid():
-            idea_form.save()
-            return redirect("idea-detail-page", slug=idea.slug)
+        data = json.loads(request.body)
+        idea.title = data["title"]
+        idea.shortdesc = data["shortdesc"]
+        idea.content = data["content"]
+        idea.slug = data["slug"]
+        idea.website = data["website"]
+
+        from django.db.utils import IntegrityError
+        try:
+            idea.save()
+        except IntegrityError:
+            import uuid
+            new_slug = "%s-%s" % (idea.slug, uuid.uuid1())
+            idea.slug = new_slug
+            idea.save()
+
+        return JsonResponse({
+            "message": "idea updated",
+            "idea_slug": idea.slug
+        })
+
     else:
         idea_form = forms.IdeaEditForm(instance=idea)
-
-    context = {
-        "form": idea_form
-    }
-
-    return render(request, "idea/idea-update.html", context)
+        context = {
+            "form": idea_form
+        }
+        return render(request, "idea/idea-update.html", context)
 
 
-@login_required()
+@login_required
+@decorators.user_is_founder
 def idea_delete(request, slug):
 
     idea = get_object_or_404(models.Idea, slug=slug)

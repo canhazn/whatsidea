@@ -17,7 +17,7 @@ class TestModel(TestCase):
 
         post = models.Idea.objects.create(
             title="Test Idea",             
-            solution="Test solution"
+            shortdesc="Test shortdesc"
         )        
         self.assertEqual(str(post), post.title)
         
