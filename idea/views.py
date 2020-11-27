@@ -13,18 +13,16 @@ def idea_create(request):
     if request.method == "POST":
         data = json.loads(request.body)
         title = data["title"]
-        problem = data["problem"]
-        solution = data["solution"]
-        description = data["description"]
+        shortdesc = data["shortdesc"]
+        content = data["content"]
         slug = slugify(title)
 
         from django.db.utils import IntegrityError
         try:
             idea = models.Idea.objects.create(
                 title=title,
-                problem=problem,
-                solution=solution,
-                description=description,
+                shortdesc=shortdesc,
+                content=content,
                 slug=slug
             )
         except IntegrityError:
@@ -32,9 +30,8 @@ def idea_create(request):
             new_slug = "%s-%s" % (slug, uuid.uuid1())
             idea = models.Idea.objects.create(
                 title=title,
-                problem=problem,
-                solution=solution,
-                description=description,
+                shortdesc=shortdesc,
+                content=content,
                 slug=new_slug
             )
 
@@ -53,7 +50,6 @@ def idea_create(request):
     return render(request, "idea/idea-create.html", context)
 
 
-
 @login_required
 @decorators.user_is_founder
 def idea_update(request, slug):
@@ -63,9 +59,8 @@ def idea_update(request, slug):
     if request.method == "POST":
         data = json.loads(request.body)
         idea.title = data["title"]
-        idea.problem = data["problem"]
-        idea.solution = data["solution"]
-        idea.description = data["description"]
+        idea.shortdesc = data["shortdesc"]
+        idea.content = data["content"]
         idea.slug = data["slug"]
         idea.website = data["website"]
 

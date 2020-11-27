@@ -7,7 +7,7 @@
 <!-- Extra head here -->
 {% block extrahead %}
 <title>whatsIdea</title>
-<meta name="description" content="">
+<meta name="content" content="">
 {% endblock extrahead %}
 
 
@@ -39,15 +39,10 @@
                 <a class="dropdown-item cursor-pointer">Share</a>
             </div>
         </div>
-    </nav>
-    {% if idea.problem %}
+    </nav>  
+    {% if idea.shortdesc %}
     <div class="p-3 my-3 border border-left-success">
-        <p>{{ idea.problem }}</p>
-    </div>
-    {% endif %}
-    {% if idea.solution %}
-    <div class="p-3 my-3 border border-left-success">
-        <p>{{ idea.solution }}</p>
+        <p>{{ idea.shortdesc }}</p>
     </div>
     {% endif %}
     <div class="p-3 my-3 border border-left-secondary">
@@ -235,14 +230,14 @@
 
 
 <script>
-    let idea_description = `{{ idea.description | js }}`;
-    let description = JSON5.parse(idea_description.slice(1, -1))
+    let idea_content = `{{ idea.content | js }}`;
+    let content = JSON5.parse(idea_content.slice(1, -1))
 
     const editor = new EditorJS({
         readOnly: true,
         holder: 'editorjs',
         minHeight: '0',
-        data: description,
+        data: content,
         tools: {
             header: Header,
             image: {

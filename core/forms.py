@@ -31,13 +31,13 @@ class ProfileForm(forms.ModelForm):
 class IdeaCreateForm(forms.ModelForm):
     class Meta:
         model = models.Idea
-        fields = ["title", "problem", "solution", "description"]
+        fields = ["title",   "shortdesc", "content"]
 
 
 class IdeaEditForm(forms.ModelForm):
     class Meta:
         model = models.Idea
-        fields = ["title", "slug", "problem", "solution", "description",
+        fields = ["title", "slug",   "shortdesc", "content",
                   "website"]
 
 

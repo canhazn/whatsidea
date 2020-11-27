@@ -4,7 +4,7 @@
 <!-- Extra head here -->
 {% block extrahead %}
 <title>whatsIdea</title>
-<meta name="description" content="">
+<meta name="content" content="">
 {% endblock extrahead %}
 
 
@@ -53,17 +53,16 @@
                         {% comment %} <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
                         </a> {% endcomment %}
-                        {% if idea.problem %}
-                        <p>{{ idea.solution }}</p>                        
+                    
+                        <p>{{ idea.shortdesc }}</p>                        
 
-                        {% endif %}
-                        {% comment %} {% if idea.solution %}
+                        {% comment %} {% if idea.shortdesc %}
                         <div class="p-3 my-3 border border-left-success">
                         </div>
                         {% endif %}
                         {% endcomment %}
                         <div class="editorjs p-3 my-3 border border-left-secondary" id="editorjs-{{ idea.slug }}"
-                            data-description="{{ idea.description }}" data-editor_id="editorjs-{{ idea.slug }}">
+                            data-content="{{ idea.content }}" data-editor_id="editorjs-{{ idea.slug }}">
                         </div>
 
                         <div class="border-top mt-3">
@@ -111,12 +110,12 @@
 <script>
     $(".editorjs").each(function () {
         let current = $(this);
-        console.log(current.data("description"))
+        console.log(current.data("content"))
         let editor = new EditorJS({
             readOnly: true,
             holder: current.data("editor_id"),
             minHeight: '0',
-            data: current.data("description"),
+            data: current.data("content"),
             tools: {
                 header: Header,
                 image: {
