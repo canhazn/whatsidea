@@ -2,6 +2,7 @@ from core import models
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 
 
 @login_required()
@@ -24,3 +25,12 @@ def comment_create(request):
                                   content=content)
 
     return JsonResponse({"message": "comment create"})
+
+@login_required
+def commnent_delete(request):
+    data = json.loads(request.body)
+    comment_id = data["comment_id"]
+    comment = get_object_or_404(models.Comment, id = comment_id)
+    comment.delete()
+
+    return JsonResponse({"message": "comment deleted"})

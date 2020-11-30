@@ -329,6 +329,11 @@
         delete_post(post_id);
     });
 
+    $(".btn-comment-delete").click(function () {
+        let comment_id = $(this).data("comment_id");
+        delete_comment(comment_id);
+    });
+
 
     function delete_post(post_id) {
         data = JSON.stringify({
@@ -404,6 +409,26 @@
         })
 
 
+    }
+
+    function delete_comment(comment_id){
+        data = JSON.stringify({
+            "comment_id": comment_id
+        })
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'comment-delete-api' %}",
+            type: "POST",
+            dataType: "json",
+            data: data
+        }).done(function (result){
+            console.log(result)
+            window.location.reload()
+        })
     }
 
     $('.collapse-contribution-form').on('shown.bs.collapse', function () {
