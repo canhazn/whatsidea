@@ -16,7 +16,7 @@ def upload_image(request):
     return JsonResponse({
         "success": 1,
         "file": {
-            "url": "%s/%s" % ("image/", str(image.id))
+            "url": "%s/%s" % ("image", str(image.id))
         }
     })
 
