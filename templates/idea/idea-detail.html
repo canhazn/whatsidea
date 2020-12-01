@@ -39,7 +39,7 @@
                 <a class="dropdown-item cursor-pointer">Share</a>
             </div>
         </div>
-    </nav>  
+    </nav>
     {% if idea.shortdesc %}
     <div class="p-3 my-3 border border-left-success">
         <p>{{ idea.shortdesc }}</p>
@@ -99,12 +99,18 @@
                             <span>{{ contribution.date_created | date:"d/m/y H:i"}}</span>
                         </div>
                         <div class="navbar p-0 justify-content-start">
-                            <span class="mr-3">Heart1</span>
+                            {% include "component/heart-icon.html" %}
                             <span class="mr-3 btn-reply" data-toggle="collapse"
                                 data-target="#sub-contribution-form-{{ contribution.id }}"
-                                data-contribution_id="{{ contribution.id }}">Reply</span>
+                                data-contribution_id="{{ contribution.id }}">{% include "component/reply-icon.html" %}</span>
                             <div class="dropup">
-                                <span class="mr-3" data-toggle="dropdown">More</span>
+                                <span class="mr-3" data-toggle="dropdown">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
+                                        </path>
+                                    </svg></span>
                                 <div class="dropdown-menu dropdown-menu-right">
 
                                     {% if user == contribution.user  %}
