@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from core import models
 from django.http import JsonResponse
 
@@ -12,15 +12,15 @@ def upload_image(request):
         img_file=request.FILES["image"]
     )
 
+    print(image.img_file)
     return JsonResponse({
         "success": 1,
         "file": {
-            "url": "%s/%s" % ("media", str(image.img_file))
+            "url": "%s/%s" % ("image/", str(image.id))
         }
     })
 
 
-def view_image(request, file_name):
-    return JsonResponse({
-        "message": "idea created",
-    })
+def view_image(request, pk):
+    img = get_object_or_404(models.Image, id=pk)
+    return redirect(img.img_file.url)
