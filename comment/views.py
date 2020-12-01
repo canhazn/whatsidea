@@ -26,15 +26,12 @@ def comment_create(request):
 
     return JsonResponse({"message": "comment create"})
 
+
 @login_required
 def commnent_delete(request):
     data = json.loads(request.body)
     comment_id = data["comment_id"]
-    comment = get_object_or_404(models.Comment, id = comment_id)
+    comment = get_object_or_404(models.Comment, id=comment_id)
     comment.delete()
 
     return JsonResponse({"message": "comment deleted"})
-
-@login_required
-def comment_heart(request):
-    
