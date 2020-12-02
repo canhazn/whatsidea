@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from whatsidea.views import homePage
+from whatsidea.views import homePage, privacyPage, policyPage
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -28,7 +28,9 @@ urlpatterns = [
     path('vote/', include('vote.urls')),
     path('contribution/', include('contribution.urls')),
     path('comment/', include('comment.urls')),
-    path('image/', include('image.urls'))
+    path('image/', include('image.urls')),
+    path('privacy/', privacyPage, name="privacy-page"),
+    path('policy/', policyPage, name="policy-page")
 ]
 
 if settings.DEBUG:

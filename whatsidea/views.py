@@ -11,3 +11,11 @@ def homePage(request):
         "idea_count": idea_count
     }
     return render(request, 'index.html', context)
+
+
+def privacyPage(request):
+    return render(request, 'privacy.html')
+
+
+def policyPage(request):
+    return render(request, 'policy.html')
