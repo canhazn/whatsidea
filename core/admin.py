@@ -35,6 +35,10 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ['user', "date_created"]
 
 
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post']
+
+
 admin.site.register(models.Idea, IdeaAdmin)
 admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Contribution, ContributionAdmin)
@@ -42,3 +46,4 @@ admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Profile, ProfileAdmin)
 admin.site.register(models.Image, ImageAdmin)
+admin.site.register(models.Like, LikeAdmin)
