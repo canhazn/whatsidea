@@ -111,7 +111,7 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment,null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "user:%s post:%s" % (str(self.user), str(self.post))

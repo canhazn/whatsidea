@@ -37,5 +37,5 @@ def like(request):
             })
 
     return JsonResponse({
-                "message": "like created"
+                "message": "id required!"
             })
