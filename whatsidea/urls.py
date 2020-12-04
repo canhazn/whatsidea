@@ -30,7 +30,8 @@ urlpatterns = [
     path('comment/', include('comment.urls')),
     path('image/', include('image.urls')),
     path('privacy/', privacyPage, name="privacy-page"),
-    path('policy/', policyPage, name="policy-page")
+    path('policy/', policyPage, name="policy-page"),
+    path('like/', include('like.urls'))
 ]
 
 if settings.DEBUG:

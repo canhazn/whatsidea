@@ -19,7 +19,7 @@
     <div class="social-login pb-3 border-bottom">
         <a class="btn btn-block btn-outline-primary w-100" href="{% url 'social:begin' 'google-oauth2' %}">Login with
             Google</a>
-        <a class="btn btn-block btn-outline-primary w-100 mt-3 disabled cursor-not-allowed">Login with Facebook</a>
+        <a class="btn btn-block btn-outline-primary w-100 mt-3 disabled cursor-not-allowed" href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
     </div>
     <form method="POST">
         <p class="h5">Login with your acount:</p>
