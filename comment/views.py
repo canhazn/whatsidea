@@ -35,3 +35,4 @@ def commnent_delete(request):
     comment.delete()
 
     return JsonResponse({"message": "comment deleted"})
+
