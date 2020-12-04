@@ -39,27 +39,33 @@
     <div class="row">
         <div class="col-md-7 p-0 p-md-3">
             <main>
-
                 <div class="search-area mb-3 mx-3 mx-md-0">
                     <legend>
                         Search for Business Ideas!</legend>
                     <form action="GET">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+                                            <path fill-rule="evenodd"
+                                                d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="inlineFormInputGroupUsername2"
+                                    placeholder="Search">
+                            </div>
                             <small id="emailHelp" class="form-text text-muted">We've been shared {{ idea_count }} ideas
                             </small>
                         </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
-                <div class=" ">
-                    <a href="{% url 'idea-create-page' %}"
-                        class="new-idea-btn border btn w-100 btn btn-outline-secondary text-left rounded-0">
-                        <img src="{% static 'img/say-hi.png' %}" alt="">
-                        <span>Have</span>
-                        <span>New</span>
-                        <span>Idea</span>
-                    </a>
+                <div class="">
+                    {% include "component/idea-create.html" %}
                 </div>
 
                 <div>
@@ -157,12 +163,14 @@
         entryTemplate: `<li class="list-group-item border-0">
                             <a href="{url}" class="w-100">
                                 <img class="w-100 rounded" src="{teaserImageUrl}" alt="" srcset="">
-                            </a>                            
-                            <a href="{url}">{title}</a>
+                            </a>    
+                            <div class="pt-3">
+                            <a href="{url}" class="mt-2">{title}</a>
+                            </div>                        
                             <small class="d-block">{date}</small>                            
                             {shortBodyPlain}
                           </li>`,
-        dateFormat: "MMMM Do, YYYY",
+        dateFormat: "MM/D, YYYY",
 
 
     });
