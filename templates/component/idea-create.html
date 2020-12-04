@@ -1,11 +1,11 @@
-<form method="POST" id="idea-create-form" class="p-3 px-md-0">
+<form method="POST" id="idea-create-form" class="p-3 px-md-3 rounded custom-background">
     <div class="form-group">
         <div class="rounded" id="">
             <div class="" id="create-idea-editorjs"></div>
         </div>
     </div>
     {% csrf_token %}
-    <div class="" id="additional-field">
+    <div class="collapse" id="additional-field">
         <div class="form-group">
             <label for="title">Name you Idea *</label>
             <input type="text" class="form-control" name="title" id="title" placeholder="Title" required>
@@ -53,7 +53,8 @@
 <script>
     const editor = new EditorJS({
         holder: 'create-idea-editorjs',
-        minHeight: '30',
+        autofocus: true,
+        minHeight: '40',
         data: {
             "time": 1607082835229,
             "blocks": [{
@@ -75,22 +76,7 @@
             $("#additional-field").collapse("show");
             $('#idea-create-form').addClass("custom-background")
         },
-        tools: {
-            header: Header,
-            image: {
-                inlineToolbar: true,
-                class: ImageTool,
-                config: {
-                    additionalRequestHeaders: {
-                        "X-CSRFToken": csrftoken
-                    },
-                    endpoints: {
-                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
-                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                    }
-                }
-            }
-        },
+        tools: editor_tools
     });
 
     $('form').submit(function (event) {

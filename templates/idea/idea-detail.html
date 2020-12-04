@@ -18,7 +18,7 @@
 
 </style>
 <main>
-    <nav class="navbar px-0 border-bottom">
+    <nav class="navbar px-0 border-bottom mb-3">
         <h1 class="h3">{{ idea.title }}</h1>
         <div class="dropdown">
             <button type="button" class="btn" data-toggle="dropdown">
@@ -41,7 +41,7 @@
         </div>
     </nav>
     {% if idea.shortdesc %}
-    <div class="p-3 my-3 border border-left-success">
+    <div class="p-3 border-left-success">
         <p>{{ idea.shortdesc }}</p>
     </div>
     {% endif %}
@@ -254,21 +254,7 @@
         holder: 'editorjs',
         minHeight: '0',
         data: content,
-        tools: {
-            header: Header,
-            image: {
-                class: ImageTool,
-                config: {
-                    additionalRequestHeaders: {
-                        "X-CSRFToken": csrftoken
-                    },
-                    endpoints: {
-                        byFile: "http://localhost:8000/image/upload/", // Your backend file uploader endpoint
-                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                    }
-                }
-            }
-        },
+        tools: editor_tools
     });
 
 
@@ -337,6 +323,7 @@
             window.location.reload()
         })
     }
+
     function vote_idea(idea_id) {
         data = JSON.stringify({
             "idea_id": idea_id
@@ -356,6 +343,7 @@
             window.location.reload()
         })
     }
+
     function vote_contribution(contribution_id) {
         data = JSON.stringify({
             "contribution_id": contribution_id

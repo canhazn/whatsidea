@@ -74,8 +74,9 @@
                         {% comment %} <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
                         </a> {% endcomment %}
-
-                        <p class="p-3 border-left-info">{{ idea.shortdesc }}</p>
+                        {% if idea.shortdesc %}
+                        <p class="p-3 border-left-success">{{ idea.shortdesc }}</p>
+                        {% endif %}
 
                         {% comment %} {% if idea.shortdesc %}
                         <div class="p-3 my-3 border border-left-success">
@@ -137,22 +138,7 @@
             holder: current.data("editor_id"),
             minHeight: '0',
             data: current.data("content"),
-            tools: {
-                header: Header,
-                image: {
-                    inlineToolbar: true,
-                    class: ImageTool,
-                    config: {
-                        additionalRequestHeaders: {
-                            "X-CSRFToken": csrftoken
-                        },
-                        endpoints: {
-                            byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
-                            byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                        }
-                    }
-                }
-            },
+            tools: editor_tools
         });
     });
 
