@@ -11,6 +11,9 @@
 
 <!-- Content here -->
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-rss/3.3.0/jquery.rss.min.js"></script>
 <style>
     .new-idea-btn {
         cursor: pointer;
@@ -18,6 +21,18 @@
 
     img {
         width: 120px;
+    }
+
+    #side-nav {
+        position: relative;
+    }
+
+    #rss-feeds {
+        max-height: 100vh;
+        overflow: auto;
+        position: sticky;
+        top: 0;
+        right: 0;
     }
 </style>
 <div>
@@ -53,8 +68,8 @@
                         {% comment %} <a href="{% url 'idea-detail-page' idea.slug %}">
                             <span>{{ idea.title }}</span>
                         </a> {% endcomment %}
-                    
-                        <p>{{ idea.shortdesc }}</p>                        
+
+                        <p>{{ idea.shortdesc }}</p>
 
                         {% comment %} {% if idea.shortdesc %}
                         <div class="p-3 my-3 border border-left-success">
@@ -101,8 +116,8 @@
             </main>
         </div>
 
-        <div class="col-md-5">
-
+        <div class="col-md-5" id="side-nav">
+            <div id="rss-feeds"></div>
         </div>
     </div>
 </div>
@@ -133,6 +148,22 @@
                 }
             },
         });
+    });
+
+    $("#rss-feeds").rss("https://vnexpress.net/rss/startup.rss", {
+        limit: 10,
+        layoutTemplate: "<ul class='list-group p-0'>{entries}</ul>",
+        entryTemplate: `<li class="list-group-item border-0">
+                            <a href="{url}" class="w-100">
+                                <img class="w-100 rounded" src="{teaserImageUrl}" alt="" srcset="">
+                            </a>                            
+                            <a href="{url}">{title}</a>
+                            <small class="d-block">{date}</small>                            
+                            {shortBodyPlain}
+                        </li>`,
+        dateFormat: "MMMM Do, YYYY",
+
+
     });
 </script>
 
