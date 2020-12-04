@@ -152,6 +152,7 @@
 
     $("#rss-feeds").rss("https://vnexpress.net/rss/startup.rss", {
         limit: 10,
+        ssl: true,
         layoutTemplate: "<ul class='list-group p-0'>{entries}</ul>",
         entryTemplate: `<li class="list-group-item border-0">
                             <a href="{url}" class="w-100">
@@ -160,7 +161,7 @@
                             <a href="{url}">{title}</a>
                             <small class="d-block">{date}</small>                            
                             {shortBodyPlain}
-                        </li>`,
+                          </li>`,
         dateFormat: "MMMM Do, YYYY",
 
 
