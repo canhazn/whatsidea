@@ -99,9 +99,10 @@ class Comment(models.Model):
 
 
 class Vote(models.Model):
-    idea = models.ForeignKey(Idea, on_delete=models.CASCADE)
+    idea = models.ForeignKey(Idea, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
+    contribution = models.ForeignKey(Contribution, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "user:%s  idea:%s" % (str(self.user), str(self.idea))
