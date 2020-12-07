@@ -5,8 +5,6 @@ from django.http import JsonResponse
 
 # Create your views here.
 def upload_image(request):
-    img_file = request.FILES["image"]
-
     image = models.Image.objects.create(
         user=request.user,
         img_file=request.FILES["image"]
@@ -16,11 +14,11 @@ def upload_image(request):
     return JsonResponse({
         "success": 1,
         "file": {
-            "url": "%s/%s" % ("image", str(image.id))
+            "url": "%s" % (image.img_file)
         }
     })
 
 
-def view_image(request, pk):
-    img = get_object_or_404(models.Image, id=pk)
+def view_image(request, file_name):
+    img = get_object_or_404(models.Image, img_file="image/%s" % (file_name))
     return redirect(img.img_file.url)
