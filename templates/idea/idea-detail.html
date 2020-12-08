@@ -6,7 +6,7 @@
 
 <!-- Extra head here -->
 {% block extrahead %}
-<title>whatsIdea</title>
+<title>{{ idea.title }} | whatsIdea.Business</title>
 <meta name="content" content="">
 {% endblock extrahead %}
 
@@ -84,7 +84,7 @@
         <!-- contribution area -->
         <div class="contribution-area">
             {% for contribution in contributions %}
-            <div>
+            <div class="contribution">
                 <div class="contributions mt-3 px-2 border-left-info">
                     <div class="contribution-content">
                         <p class="m-0"> {{ contribution }} </p>
@@ -99,18 +99,14 @@
                                 data-contribution_id="{{ contribution.id }}">
                                 {% include "component/vote-icon.html" %}
                             </a>
-                            <span class="mr-3">{{ contribution.vote_set.all.count }}</span>
-                            <span class="mr-3 btn-reply" data-toggle="collapse"
+                            {% if contribution.vote_set.all.count > 0 %}
+                            <span class="">{{ contribution.vote_set.all.count }}</span>
+                            {% endif %}
+                            <span class="mx-3 btn-reply cursor-pointer" data-toggle="collapse"
                                 data-target="#sub-contribution-form-{{ contribution.id }}"
-                                data-contribution_id="{{ contribution.id }}">{% include "component/reply-icon.html" %}</span>
+                                data-contribution_id="{{ contribution.id }}">Reply</span>
                             <div class="dropup">
-                                <span class="mr-3" data-toggle="dropdown">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
-                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
-                                        </path>
-                                    </svg></span>
+                                <span class="mr-3 cursor-pointer" data-toggle="dropdown"> More</span>
                                 <div class="dropdown-menu dropdown-menu-right">
 
                                     {% if user == contribution.user  %}
@@ -162,18 +158,14 @@
                                 data-contribution_id="{{ sub.id }}">
                                 {% include "component/vote-icon.html" %}
                             </a>
-                            <span class="mr-3">{{ sub.vote_set.all.count }}</span>
-                            <span class="mr-3 btn-reply" data-toggle="collapse"
+                            {% if sub.vote_set.all.count > 0 %}
+                            <span class="">{{ sub.vote_set.all.count }}</span>
+                            {% endif %}
+                            <span class="mx-3 btn-reply cursor-pointer" data-toggle="collapse"
                                 data-target="#sub-contribution-form-{{ contribution.id }}"
-                                data-contribution_id="{{ contribution.id }}">{% include "component/reply-icon.html" %}</span>
+                                data-contribution_id="{{ contribution.id }}">Reply</span>
                             <div class="dropup inline-block">
-                                <span class="mr-3" data-toggle="dropdown">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical"
-                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z">
-                                        </path>
-                                    </svg></span>
+                                <span class="mr-3 cursor-pointer" data-toggle="dropdown"> More</span>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     {% if user == sub.user  %}
                                     <a class="dropdown-item cursor-pointer" data-toggle="modal"
@@ -271,6 +263,7 @@
         contribution_id = $(this).data("contribution_id");
         delete_contribution(contribution_id);
     })
+
     $(".btn-contribution-vote").click(function () {
         let contribution_id = $(this).data("contribution_id");
         vote_contribution(contribution_id)
@@ -320,7 +313,7 @@
             data: data
         }).done(function (result) {
             console.log(result)
-            window.location.reload()
+            insert_contribution(idea_id, parent_id, content)
         })
     }
 
@@ -364,11 +357,21 @@
         })
     }
 
+    // focus when click reply
     $('.collapse-contribution-form').on('shown.bs.collapse', function () {
         console.log(this)
         let textarea = $(this).find("textarea");
         textarea.focus();
 
     })
+
+
+    function insert_contribution(idea_id, parent_id, content) {
+        if (parent_id) {
+            console.log($(`#${parent_id}`))
+        } else {
+            $()
+        }
+    }
 </script>
 {% endblock main-content %}
