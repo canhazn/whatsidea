@@ -29,12 +29,7 @@ def contribution_create(request):
     )
 
     return JsonResponse({
-        "message": "contributeion created",
-        "contribution": {
-            "id": contribution.id,
-            "parent": contribution.parent,
-            "content": contribution.content,
-        }
+        "message": "contributeion created"
     })
 
 
