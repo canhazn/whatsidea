@@ -27,12 +27,15 @@
         position: relative;
     }
 
-    #rss-feeds {
-        max-height: 100vh;
-        overflow: auto;
+    .rss-area {
         position: sticky;
-        top: 0;
+        top: 72px;
         right: 0;
+    }
+
+    #rss-feeds {
+        overflow: auto;
+        max-height: calc(100vh - 118px);
     }
 </style>
 <div>
@@ -70,10 +73,11 @@
 
                 <div>
                     {% for idea in ideas %}
-                    <div id="{{ idea.slug }}" class="idea px-3 px-md-0 py-2 my-3" data-idea_slug="{{ idea.slug }}">
-                        {% comment %} <a href="{% url 'idea-detail-page' idea.slug %}">
-                            <span>{{ idea.title }}</span>
-                        </a> {% endcomment %}
+                    <div id="{{ idea.slug }}" class="idea px-1 px-md-3 py-2 my-3 bg-white rounded"
+                        data-idea_slug="{{ idea.slug }}">
+                        <h2 class="h4 my-2">
+                            <a href="{% url 'idea-detail-page' idea.slug %}"> {{ idea.title }} </a>
+                        </h2>
                         {% if idea.shortdesc %}
                         <p class="p-3 border-left-success">{{ idea.shortdesc }}</p>
                         {% endif %}
@@ -87,33 +91,31 @@
                             data-content="{{ idea.content }}" data-editor_id="editorjs-{{ idea.slug }}">
                         </div>
 
-                        <div class="border-bottom mt-3">
-                            <nav class="navbar px-0">
-                                <div>
-                                    <a class="navbar-brand" href="">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-capslock-fill"
-                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M7.27 1.047a1 1 0 0 1 1.46 0l6.345 6.77c.6.638.146 1.683-.73 1.683H11.5v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1H1.654C.78 9.5.326 8.455.924 7.816L7.27 1.047zM4.5 13.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1z" />
-                                        </svg>
-                                    </a>
-                                    <span>{{ idea.vote_set.all.count }}</span>
-                                    <a class="navbar-brand mr-0 ml-3" href="">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16"
-                                            class="bi bi-chat-left-dots-fill" fill="currentColor"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                        </svg>
-                                    </a>
-                                    <span class='ml-3'>{{ idea.contribution_set.all.count }}</span>
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="vote">
+                                    <div class="d-inline-block mr-3">
+                                        <a class="navbar-brand mr-1 cursor-pointer btn-idea-vote"
+                                            data-idea_id="{{ idea.id }}">
+                                            {% include "component/vote-icon.html"%}
+                                        </a>
+                                        <span>{{ idea.vote_set.all.count }} </span>
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <a class="navbar-brand mr-0" href="">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-puzzle-fill"
+                                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .036-.054l.003-.01v-.008a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003l-.003-.01a.214.214 0 0 0-.036-.053.859.859 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.036.054l-.003.01v.002l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855z" />
+                                            </svg>
+                                        </a>
+                                        <span>{{ idea.contribution_set.all.count }} </span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href="{% url 'idea-detail-page' idea.slug %}">
-                                        @{{ idea.slug }}
-                                    </a>
-                                </div>
-                            </nav>
+                                <a class="idea-slug" href="{% url 'idea-detail-page' idea.slug %}">
+                                    @{{ idea.slug }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -123,9 +125,11 @@
             </main>
         </div>
 
-        <div class="col-md-5" id="side-nav">
-            <legend class="border-bottom px-3 pt-3 pb-2">Starup news:</legend>
-            <div id="rss-feeds"></div>
+        <div class="col-md-5 p-0 p-md-3" id="side-nav">
+            <div class="rss-area bg-white">
+                <legend class="border-bottom px-3 pt-3 pb-2">Starup news:</legend>
+                <div id="rss-feeds"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -147,17 +151,17 @@
         limit: 10,
         ssl: true,
         layoutTemplate: "<ul class='list-group p-0'>{entries}</ul>",
-        entryTemplate: `<li class="list-group-item border-0">
+        entryTemplate: `<li class="list-group-item border-left-0 border-top-0 border-bottom">
                             <a href="{url}" class="w-100">
                                 <img class="w-100 rounded" src="{teaserImageUrl}" alt="" srcset="">
                             </a>    
                             <div class="pt-3">
                             <a href="{url}" class="mt-2">{title}</a>
                             </div>                        
-                            <small class="d-block">{date}</small>                            
                             {shortBodyPlain}
+                            <small class="d-block">{date}</small>                            
                           </li>`,
-        dateFormat: "MM/D, YYYY",
+        dateFormat: "D/MM, YYYY",
 
 
     });
