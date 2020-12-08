@@ -313,7 +313,7 @@
             data: data
         }).done(function (result) {
             console.log(result)
-            insert_contribution(idea_id, parent_id, content)
+            window.location.reload()
         })
     }
 
@@ -364,14 +364,5 @@
         textarea.focus();
 
     })
-
-
-    function insert_contribution(idea_id, parent_id, content) {
-        if (parent_id) {
-            console.log($(`#${parent_id}`))
-        } else {
-            $()
-        }
-    }
 </script>
 {% endblock main-content %}
