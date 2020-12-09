@@ -91,22 +91,7 @@
         holder: "editorjs",
         minHeight: '100',
         data: current.data("content"),
-        tools: {
-            header: Header,
-            image: {
-                inlineToolbar: true,
-                class: ImageTool,
-                config: {
-                    additionalRequestHeaders: {
-                        "X-CSRFToken": csrftoken
-                    },
-                    endpoints: {
-                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
-                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
-                    }
-                }
-            }
-        },
+        tools: editor_tools
     });
 
     $('form').submit(function (event) {

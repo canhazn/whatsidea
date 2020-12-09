@@ -32,6 +32,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
     <script data-ad-client="ca-pub-7388797242931600" async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
@@ -39,7 +45,7 @@
 <body>
     <style>
         body {
-            padding-top: 56px;
+            padding-top: 56px;            
         }
 
         .cursor-pointer {
@@ -84,6 +90,10 @@
             border-left: .25rem solid #343a40 !important;
             border-radius: .35rem;
         }
+
+        .custom-background {
+            background-color: #f0f9ff;
+        }
     </style>
 
     <script>
@@ -103,6 +113,41 @@
             return cookieValue;
         }
         const csrftoken = getCookie('csrftoken');
+
+        const editor_tools = {
+            header: Header,
+            inlineCode: {
+                class: InlineCode,
+                shortcut: 'CMD+SHIFT+M',
+            },
+            list: {
+                class: List,
+                inlineToolbar: true,
+            },
+            delimiter: Delimiter,
+            table: {
+                class: Table,
+                inlineToolbar: true,
+            },
+            embed: Embed,
+            checklist: {
+                class: Checklist,
+                inlineToolbar: true,
+            },
+            image: {
+                inlineToolbar: true,
+                class: ImageTool,
+                config: {
+                    additionalRequestHeaders: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    endpoints: {
+                        byFile: `{% url 'image-upload-api' %}`, // Your backend file uploader endpoint
+                        byUrl: 'http://localhost:8000/image/upload/', // Your endpoint that provides uploading by Url
+                    }
+                }
+            }
+        }
     </script>
 
 

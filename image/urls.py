@@ -3,6 +3,6 @@ from image import views
 
 
 urlpatterns = [
-    path("<int:pk>/", views.view_image, name="image-view-api"),
-    path("upload/", views.upload_image, name="image-upload-api")
+    path("upload/", views.upload_image, name="image-upload-api"),
+    path("<str:file_name>/", views.view_image, name="image-view-api")
 ]

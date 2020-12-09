@@ -1,6 +1,6 @@
 from django.contrib import admin
 from core import models
-
+from django.utils.html import format_html
 
 class IdeaAdmin(admin.ModelAdmin):
     list_display = ['title', 'get_owners']
@@ -32,7 +32,12 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['user', "date_created"]
+    list_display = ['user', "date_created", "image_tag"]
+
+    def image_tag(self, obj):
+        return format_html('<img style="max-width: 150px" src="{}"/>'.format(obj.img_file.url))
+
+    image_tag.short_description = "Image"
 
 
 class LikeAdmin(admin.ModelAdmin):

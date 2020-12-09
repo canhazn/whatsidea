@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
 from core import models
+from django.core import serializers
 
 
 @login_required()
@@ -27,7 +28,9 @@ def contribution_create(request):
         content=content
     )
 
-    return JsonResponse({"message": "contributeion created"})
+    return JsonResponse({
+        "message": "contributeion created"
+    })
 
 
 @login_required()
@@ -35,9 +38,8 @@ def contribution_delete(request):
 
     data = json.loads(request.body)
     contribution_id = data["contribution_id"]
-    
-    contribution = get_object_or_404(models.Contribution, id= contribution_id)
+
+    contribution = get_object_or_404(models.Contribution, id=contribution_id)
     contribution.delete()
 
     return JsonResponse({"message": "contributeion deleted"})
-
