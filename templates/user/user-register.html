@@ -54,7 +54,7 @@
     </form>
 
     <div class="border-top mt-3 pt-3">
-        <p>Already have an account? <a href="{% url 'user-login-page' %}">Login</a></p>
+        <p>Already have an account? <a href="{% url 'user-login-page' %}?next={{ request.path }}">Login</a></p>
     </div>
 </main>
 
