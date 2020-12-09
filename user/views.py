@@ -12,13 +12,15 @@ def login(request):
     if request.user.is_authenticated:
         return redirect("home-page")
 
+    redirect_to = request.GET.get('next', 'home-page')
+
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if user is not None:
                 loginMethod(request, user)
-                return redirect("home-page")
+                return redirect(redirect_to)
         return render(request, 'user/user-login.html', {
             'form': form
         })
@@ -33,13 +35,14 @@ def register(request):
     if request.user.is_authenticated:
         return redirect("home-page")
 
+    redirect_to = request.GET.get('next', '')
     if request.method == "POST":
         form = forms.UserRegisterForm(data=request.POST)
         if form.is_valid():
             user = form.save()
             loginMethod(request, user,
                         backend='django.contrib.auth.backends.ModelBackend')
-            return redirect("home-page")
+            return redirect(redirect_to)
 
         return render(request, 'user/user-register.html', {
             'form': form

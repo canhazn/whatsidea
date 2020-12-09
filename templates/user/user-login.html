@@ -31,7 +31,7 @@
         </div>
     </form>
     <div class="border-top pt-3">
-        <p>Don't have an account? <a href="{% url 'user-register-page' %}">Register</a></p>
+        <p>Don't have an account? <a href="{% url 'user-register-page' %}?next={{ request.path }}">Register</a></p>
     </div>
 </main>
 
