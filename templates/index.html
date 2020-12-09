@@ -49,7 +49,7 @@
                 <div class="search-area mb-3 mx-3 mx-md-0">
                     <legend>
                         Search for Business Ideas!</legend>
-                    <form action="GET">
+                    <form action="http://127.0.0.1:8000/" method="GET" role="search">
                         <div class="form-group">
                             <div class="input-group mb-2 mr-sm-2">
                                 <div class="input-group-prepend">
@@ -64,7 +64,7 @@
                                     </div>
                                 </div>
                                 <input type="text" class="form-control" id="inlineFormInputGroupUsername2"
-                                    placeholder="Search">
+                                    placeholder="Search" name="search">
                             </div>
                             <small id="emailHelp" class="form-text text-muted">We've been shared {{ idea_count }} ideas
                             </small>
