@@ -2,8 +2,9 @@ from django.contrib import admin
 from core import models
 from django.utils.html import format_html
 
+
 class IdeaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'get_owners']
+    list_display = ["id", 'title', 'get_owners']
 
     def get_owners(self, obj):
         return ",".join([str(user) for user in obj.founder.all()])

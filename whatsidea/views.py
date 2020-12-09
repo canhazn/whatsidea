@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from core import models
+from django.db.models import Q
 
 
 def homePage(request):
     idea_count = models.Idea.objects.all().count()
-    ideas = models.Idea.objects.all().order_by('-id')[:5]
-
+    query = request.GET.get("search", "")
+    print(query)
+    
+    ideas = models.Idea.objects.filter(Q(shortdesc__contains=query) | Q(title__contains=query))
+    # ideas = models.Idea.objects.all().order_by('-id')[:5]
+    print(ideas)
     context = {
         "ideas": ideas,
         "idea_count": idea_count

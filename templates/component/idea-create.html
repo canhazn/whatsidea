@@ -79,7 +79,7 @@
         tools: editor_tools
     });
 
-    $('form').submit(function (event) {
+    $('#idea-create-form').submit(function (event) {
         event.preventDefault();
         let data = $("form").serializeJSON();
         let content = "";
