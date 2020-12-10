@@ -31,7 +31,7 @@ class ProfileForm(forms.ModelForm):
 class IdeaCreateForm(forms.ModelForm):
     class Meta:
         model = models.Idea
-        fields = ["title",   "shortdesc", "content"]
+        fields = ["title", "shortdesc", "content"]
 
 
 class IdeaEditForm(forms.ModelForm):
