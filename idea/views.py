@@ -3,51 +3,44 @@ from django.contrib.auth.decorators import login_required
 from core import models, forms, decorators
 from django.utils.text import slugify
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 import json
 from django.core import serializers
 
 
-@login_required()
+@login_required
+@require_POST
 def idea_create(request):
+    data = json.loads(request.body)
+    title = data["title"]
+    shortdesc = data["shortdesc"]
+    content = data["content"]
+    slug = slugify(title)
 
-    if request.method == "POST":
-        data = json.loads(request.body)
-        title = data["title"]
-        shortdesc = data["shortdesc"]
-        content = data["content"]
-        slug = slugify(title)
+    from django.db.utils import IntegrityError
+    try:
+        idea = models.Idea.objects.create(
+            title=title,
+            shortdesc=shortdesc,
+            content=content,
+            slug=slug
+        )
+    except IntegrityError:
+        import uuid
+        new_slug = "%s-%s" % (slug, uuid.uuid1())
+        idea = models.Idea.objects.create(
+            title=title,
+            shortdesc=shortdesc,
+            content=content,
+            slug=new_slug
+        )
 
-        from django.db.utils import IntegrityError
-        try:
-            idea = models.Idea.objects.create(
-                title=title,
-                shortdesc=shortdesc,
-                content=content,
-                slug=slug
-            )
-        except IntegrityError:
-            import uuid
-            new_slug = "%s-%s" % (slug, uuid.uuid1())
-            idea = models.Idea.objects.create(
-                title=title,
-                shortdesc=shortdesc,
-                content=content,
-                slug=new_slug
-            )
+    idea.founder.add(request.user)
 
-        idea.founder.add(request.user)
-        print(idea.id)
-
-        return JsonResponse({
-            "message": "idea created",
-            "idea_slug": idea.slug
-        })
-
-    context = {
-        "form": forms.IdeaCreateForm()
-    }
-
-    return render(request, "idea/idea-create.html", context)
+    return JsonResponse({
+        "message": "idea created",
+        "idea_slug": idea.slug
+    })
 
 
 @login_required

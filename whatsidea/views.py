@@ -8,7 +8,7 @@ def homePage(request):
     query = request.GET.get("search", "")
     print(query)
     
-    ideas = models.Idea.objects.filter(Q(shortdesc__contains=query) | Q(title__contains=query))
+    ideas = models.Idea.objects.filter(Q(shortdesc__contains=query) | Q(title__contains=query))[:2]
     # ideas = models.Idea.objects.all().order_by('-id')[:5]
     print(ideas)
     context = {

@@ -109,7 +109,8 @@
             data: data,
             success: function (res) {
                 console.log(res.idea_slug)
-                window.location.href = `${location.protocol}//{{ request.get_host }}/idea/${res.idea_slug}`
+                if (res.idea_slug)
+                    window.location.href = `${location.protocol}//{{ request.get_host }}/idea/${res.idea_slug}`
             },
             error: (res) => {
                 // console.log(res)

@@ -91,7 +91,7 @@
                         </div>
                         {% endif %}
                         {% endcomment %}
-                        <div class="editorjs p-3 my-3 border border-left-secondary" id="editorjs-{{ idea.slug }}"
+                        <div class="list-editorjs p-3 my-3 border border-left-secondary" id="editorjs-{{ idea.slug }}"
                             data-content="{{ idea.content }}" data-editor_id="editorjs-{{ idea.slug }}">
                         </div>
 
@@ -139,7 +139,7 @@
 </div>
 
 <script>
-    $(".editorjs").each(function () {
+    $(".list-editorjs").each(function () {
         let current = $(this);
         console.log(current.data("content"))
         let editor = new EditorJS({
