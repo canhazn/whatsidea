@@ -29,7 +29,7 @@ def like(request):
         if not created_comment:
             like.delete()
             return JsonResponse({
-                "message": "like created"
+                "message": "like deleted"
             })
         else:
             return JsonResponse({
