@@ -217,7 +217,7 @@
 
                                         {% if user == comment.user  %}
                                         <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                                            data-target="#confirm-delelte-comment-{{comment.id}}">Delete</a>
+                                            data-target="#confirm-delete-comment-{{comment.id}}">Delete</a>
                                         {% else %}
                                         <a class="dropdown-item cursor-not-allowed">Report</a>
                                         {% endif %}
@@ -226,7 +226,7 @@
                                 {% if user == comment.user  %}
                                 <!-- confirm delete comment -->
                                 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-                                    id="confirm-delelte-comment-{{comment.id}}">
+                                    id="confirm-delete-comment-{{comment.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -287,7 +287,7 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         {% if user == sub.user  %}
                                         <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                                            data-target="#confirm-delelte-comment-{{sub.id}}">Delete</a>
+                                            data-target="#confirm-delete-comment-{{sub.id}}">Delete</a>
                                         {% else %}
                                         <a class="dropdown-item cursor-not-allowed">Report</a>
                                         {% endif %}
@@ -296,7 +296,7 @@
                                 {% if user == sub.user  %}
                                 <!-- confirm delete comment -->
                                 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-                                    id="confirm-delelte-comment-{{sub.id}}">
+                                    id="confirm-delete-comment-{{sub.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

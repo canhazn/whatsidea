@@ -29,7 +29,7 @@ def contribution_create(request):
     )
 
     return JsonResponse({
-        "message": "contributeion created"
+        "message": "contribution created"
     })
 
 
@@ -42,4 +42,9 @@ def contribution_delete(request):
     contribution = get_object_or_404(models.Contribution, id=contribution_id)
     contribution.delete()
 
-    return JsonResponse({"message": "contributeion deleted"})
+    return JsonResponse({
+        "message": "contribution deleted",
+        "contribution" : {
+            "id": contribution.id,
+        }
+    })
