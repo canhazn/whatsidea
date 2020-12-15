@@ -10,7 +10,9 @@
             <span>{{ contribution.date_created | date:"d/m/y H:i"}}</span>
         </div>
         <div class="navbar p-0 justify-content-start">
-            <a class="{{ contribution.vote_set.all|voted:user }} btn btn-contribution-vote"
+
+            <!-- Vote count, voted or not -->
+            <div class="{{ contribution.vote_set.all|voted:user }} btn text-decoration-none btn-contribution-vote "
                 data-contribution_id="{{ contribution.id }}">
                 <span class="h5">
                     {% include "component/vote-icon.html"%}
@@ -20,16 +22,26 @@
                     {{ contribution.vote_set.all.count }}
                     {% endif %}
                 </span>
-            </a>
+            </div>
+
+            <!-- If contribution is chidrent, form it point to is #sub-contribution-form-{{ contribution.parent.id }}-->
+            {% if contribution.parent is Null %}
             <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
                 data-target="#sub-contribution-form-{{ contribution.id }}"
                 data-contribution_id="{{ contribution.id }}">Reply</span>
+            {% else %}
+            <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
+                data-target="#sub-contribution-form-{{ contribution.parent.id }}"
+                data-contribution_id="{{ contribution.id }}">Reply</span>
+            {% endif %}
+
+            <!-- If user owns this contribution, this user can delete -->
             <div class="dropup">
                 <span class="mr-3 btn cursor-pointer" data-toggle="dropdown"> More</span>
                 <div class="dropdown-menu dropdown-menu-right">
                     {% if user == contribution.user  %}
-                    <a class="dropdown-item cursor-pointer" data-toggle="modal" data-target="#confirm-delete-contribution"
-                        data-contribution-id="{{contribution.id}}">Delete</a>
+                    <a class="dropdown-item cursor-pointer" data-toggle="modal"
+                        data-target="#confirm-delete-contribution" data-contribution-id="{{contribution.id}}">Delete</a>
                     {% else %}
                     <a class="dropdown-item cursor-not-allowed">Report</a>
                     {% endif %}
