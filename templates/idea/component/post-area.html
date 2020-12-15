@@ -84,8 +84,13 @@
             <div class="heart">
                 <a class="navbar-brand mr-1 cursor-pointer btn-post-like" data-post_id="{{post.id}}">
                     {% include "component/heart-icon.html" %}
+                    <span class="like-count">
+                        {% if post.like_set.all.count > 0 %}
+                        {{post.like_set.all.count}}
+                        {% endif %}
+                    </span>
                 </a>
-                <span class="mr-3">{{ post.like_set.all.count }}</span>
+                
                 <a class="navbar-brand mr-1 ml-3" href="#">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-left-dots" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
@@ -182,15 +187,21 @@
                                 <a href="{% url 'user-detail-page' comment.user %}">@{{ comment.user }}</a>
                                 <span>{{ comment.date_created | date:"d/m/y H:i"}}</span>
                             </div>
-                            <div class="navbar p-0 justify-content-start">
+                            <div class="navbar p-0 justify-content-start ">
                                 <a class="navbar-brand mr-1 cursor-pointer btn-comment-like"
                                     data-comment_id="{{ comment.id }}">
-                                    {% include "component/heart-icon.html" %}
+                                    <span>{% include "component/heart-icon.html" %}</span>
+                                    <span class="like-count">
+                                        {% if comment.like_set.all.count > 0 %}
+                                        {{comment.like_set.all.count}}
+                                        {% endif %}
+                                    </span>
                                 </a>
-                                <span class="mr-3">{{ comment.like_set.all.count }}</span>
+                                <!-- <span class="mr-3">{{ comment.like_set.all.count }}</span> -->
+                                
                                 <span class="mr-3 btn-reply" data-toggle="collapse"
                                     data-target="#sub-comment-form-{{ comment.id }}"
-                                    data-comment_id="{{ comment.id }}">{% include "component/reply-icon.html" %}</span>
+                                    data-comment_id="{{ comment.id }}">Reply</span>
                                 <div class="dropup">
                                     <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -206,7 +217,7 @@
 
                                         {% if user == comment.user  %}
                                         <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                                            data-target="#confirm-delelte-comment-{{comment.id}}">Delete</a>
+                                            data-target="#confirm-delete-comment-{{comment.id}}">Delete</a>
                                         {% else %}
                                         <a class="dropdown-item cursor-not-allowed">Report</a>
                                         {% endif %}
@@ -215,7 +226,7 @@
                                 {% if user == comment.user  %}
                                 <!-- confirm delete comment -->
                                 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-                                    id="confirm-delelte-comment-{{comment.id}}">
+                                    id="confirm-delete-comment-{{comment.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -252,11 +263,16 @@
                                 <a class="navbar-brand mr-1 cursor-pointer btn-comment-like"
                                     data-comment_id="{{sub.id}}">
                                     {% include "component/heart-icon.html" %}
+                                    <span class="like-count">
+                                        {% if sub.like_set.all.count > 0 %}
+                                        {{sub.like_set.all.count}}
+                                        {% endif %}
+                                    </span>
                                 </a>
-                                <span class="mr-3">{{ sub.like_set.all.count }}</span>
+                                <!-- <span class="mr-3">{{ sub.like_set.all.count }}</span> -->
                                 <span class="mr-3 btn-reply" data-toggle="collapse"
                                     data-target="#sub-comment-form-{{ comment.id }}"
-                                    data-comment_id="{{ comment.id }}">{% include "component/reply-icon.html" %}</span>
+                                    data-comment_id="{{ comment.id }}">Reply</span>
                                 <div class="dropup inline-block">
                                     <button type="button" class="btn" id="dropdownMenuButton" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -271,7 +287,7 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         {% if user == sub.user  %}
                                         <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                                            data-target="#confirm-delelte-comment-{{sub.id}}">Delete</a>
+                                            data-target="#confirm-delete-comment-{{sub.id}}">Delete</a>
                                         {% else %}
                                         <a class="dropdown-item cursor-not-allowed">Report</a>
                                         {% endif %}
@@ -280,7 +296,7 @@
                                 {% if user == sub.user  %}
                                 <!-- confirm delete comment -->
                                 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
-                                    id="confirm-delelte-comment-{{sub.id}}">
+                                    id="confirm-delete-comment-{{sub.id}}">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -358,13 +374,49 @@
     });
 
     $(".btn-post-like").click(function () {
-        let post_id = $(this).data("post_id");
-        like_post(post_id);
+        let btn = $(this);
+        let post_id = btn.data("post_id");
+        like_post(post_id).done((res) => {
+            count = parseInt($(btn).find(".like-count").text());
+            count = count ? count : 0;
+            if (res.message == "like created") {
+                $(btn).addClass("btn-link");
+                console.log(count++);
+                $(btn).find(".like-count").text(count);
+            } else {
+                $(btn).removeClass("btn-link");
+                console.log(count--);
+                if (count == 0) {
+                    $(btn).find(".like-count").text("");
+                    return;
+                }
+                $(btn).find(".like-count").text(count);
+            }
+        });
     });
 
     $(".btn-comment-like").click(function () {
-        let comment_id = $(this).data("comment_id");
-        like_comment(comment_id);
+        let btn = $(this);
+        let comment_id = btn.data("comment_id");
+        
+        like_comment(comment_id).done((res) => {
+            count = parseInt($(btn).find(".like-count").text());
+            console.log(count);
+            count = count ? count : 0;
+            if (res.message == "like created") {
+                $(btn).addClass("btn-link");
+                count++;
+                $(btn).find(".like-count").text(count);
+            } else {
+                $(btn).removeClass("btn-link");
+                console.log(count--);
+                if (count == 0){
+                    $(btn).find(".like-count").text("")
+                    return;
+                }
+                $(btn).find(".like-count").text(count);
+            }
+        });
     });
 
     function delete_post(post_id) {
@@ -468,7 +520,7 @@
             "post_id": post_id
         })
 
-        $.ajax({
+        return $.ajax({
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrftoken
@@ -477,9 +529,6 @@
             type: "POST",
             dataType: "json",
             data: data
-        }).done(function (result) {
-            console.log(result)
-            window.location.reload()
         })
     }
 
@@ -488,7 +537,7 @@
             "comment_id": comments_id
         })
 
-        $.ajax({
+        return $.ajax({
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrftoken
@@ -497,14 +546,10 @@
             type: "POST",
             dataType: "json",
             data: data
-        }).done(function (result) {
-            console.log(result)
-            window.location.reload()
         })
     }
 
-    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
-        console.log(this)
+    $('.collapse-contribution-form').on('shown.bs.collapse', function () {        
         let textarea = $(this).find("textarea");
         textarea.focus();
 
