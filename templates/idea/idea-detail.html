@@ -154,8 +154,7 @@
                 <div class="border-left-secondary input-group">
                     <textarea class="form-control" name="content" placeholder="Some contributions..."></textarea>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary btn-create-contribution"
-                            type="submit">Send</button>
+                        <button class="btn btn-outline-secondary btn-create-contribution" type="submit">Send</button>
                     </div>
                 </div>
                 {% if not user.is_authenticated %}
@@ -208,7 +207,7 @@
                 collapse_form.collapse('hide');
             }, 200)
         });
-    })
+    })  
 
 
 
@@ -218,17 +217,21 @@
         // Button that triggered the modal
         var button = event.relatedTarget
         // Extract info from data-contribtution-id-* attributes            
-        var id = $(button).data('contribution-id')
+        var id = $(button).data('contribution-id');
+        let parent_id = $(button).data('parent-contribution-id');
+        
 
         // Initiate an AJAX request to delete contribution
         // and update the html content 
         $(".btn-contribution-delete").click(function (event) {
             delete_contribution(id).done(res => {
-                console.log(res)
                 if (res.message == "contribution deleted") {
                     confirm_delete_contribution.modal('hide');
                     setTimeout(() => {
                         $(`#contribution-${id}`).remove();
+                        if (!parent_id) {                        
+                            $(`#parent-contribution-${id}`).remove();
+                        }
                     }, 200)
                 }
             })

@@ -41,7 +41,9 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     {% if user == contribution.user  %}
                     <a class="dropdown-item cursor-pointer" data-toggle="modal"
-                        data-target="#confirm-delete-contribution" data-contribution-id="{{contribution.id}}">Delete</a>
+                        data-target="#confirm-delete-contribution"
+                        data-parent-contribution-id="{{ contribution.parent.id }}"
+                        data-contribution-id="{{contribution.id}}">Delete</a>
                     {% else %}
                     <a class="dropdown-item cursor-not-allowed">Report</a>
                     {% endif %}
