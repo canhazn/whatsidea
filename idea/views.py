@@ -17,6 +17,11 @@ def idea_create(request):
     content = data["content"]
     slug = slugify(title)
 
+    if not title:
+        return JsonResponse({
+            "message": "title required",
+        })
+
     from django.db.utils import IntegrityError
     try:
         idea = models.Idea.objects.create(
@@ -36,6 +41,16 @@ def idea_create(request):
         )
 
     idea.founder.add(request.user)
+    json_content = json.loads(content)
+
+    for block in json_content["blocks"]:
+        if block["type"] == "image":
+            img_file_name = block["data"]["file"]["url"]
+            if img_file_name != "image/man-rocket.png":                
+                query_img = get_object_or_404(
+                    models.Image, img_file="%s" % (img_file_name))
+                query_img.idea = idea
+                query_img.save()
 
     return JsonResponse({
         "message": "idea created",
