@@ -1,22 +1,100 @@
+{% load notifications_tags %}
+{% load static %}
+
+<style>
+    .notifications-area {
+        position: relative;
+    }
+
+    .notifications {
+        width: 460px;
+        height: 60vh;
+        overflow: auto;
+        position: absolute;
+        top: 48px;
+        right: 0;
+    }
+
+    .notifications ul {}
+
+    .notifi-content {
+        width: 500px;
+        word-wrap: break-word;
+    }
+
+    .text-dot-dot-dot {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
+
 <header class="fixed-top">
     <div class="header-area">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="">whatsIdea.Business</a>
-                <ul class="navbar-nav ml-auto">
+                <div class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link d-inline p-0" href="">Notify</a> |
-                        <a class="nav-link d-inline p-0" href="{% url 'user-detail-page' request.user.username %}">Profile</a>
-                    </li>
+                    <div class="nav-item">
+                        <div class="notifications-area d-inline-block p-0 cursor-pointer">
+                            <div id="btn-notity" class="nav-link" data-toggle="collapse" data-target="#list-notify">
+                                Notify
+                                <span class="badge bg-secondary">{% live_notify_badge %}</span>
+                            </div>
+
+                            <div class="notifications rounded d-none">
+                                <ul class="list-group collapse bg-secondary" id="list-notify">
+                                </ul>
+                            </div>
+                        </div>
+                        |
+                        <a class="nav-link d-inline-block p-0"
+                            href="{% url 'user-detail-page' request.user.username %}">Profile</a>
+                    </div>
                     {% else %}
-                    <li class="nav-item">
+                    <div class="nav-item">
                         <a class="nav-link d-inline p-0" href="{% url 'user-register-page' %}">Register</a> |
                         <a class="nav-link d-inline p-0" href="{% url 'user-login-page' %}">Login</a>
-                    </li>
+                    </div>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </nav>
     </div>
 </header>
+
+<script>
+    $('#btn-notity').on('click', function () {
+        if ($(".notifications").hasClass("d-none")) {
+            $(".notifications").removeClass("d-none")
+        } else {
+            $(".notifications").addClass("d-none")
+        }
+
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: "{% url 'api-list-notify' %}",
+            type: "GET",
+        }).done(res => {
+            console.log(res);
+            $("#list-notify").html(res.notifies)
+            $.ajax({
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
+                },
+                url: "{% url 'api-read-notify' %}",
+                type: "GET",
+            }).done(res => {
+                console.log(res)
+            })
+        })
+
+    })
+</script>

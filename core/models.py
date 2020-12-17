@@ -5,6 +5,13 @@ from django.dispatch import receiver
 import uuid
 
 
+from notifications.signals import notify
+
+
+def my_handler(sender, instance, created, **kwargs):
+    notify.send(instance, verb='was contributed')
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
@@ -28,7 +35,7 @@ def save_user_profile(sender, instance, **kwargs):
 class Idea(models.Model):
     founder = models.ManyToManyField(User)
     title = models.CharField(max_length=500)
-    slug = models.SlugField(max_length=500, unique=True, default=uuid.uuid1)    
+    slug = models.SlugField(max_length=500, unique=True, default=uuid.uuid1)
     shortdesc = models.TextField(blank=True)
     content = models.TextField(default="Have no Idea!")
     is_publish = models.BooleanField(default=True)
@@ -85,6 +92,15 @@ class Contribution(models.Model):
         return str(self.content)
 
 
+@receiver(post_save, sender=Contribution)
+def add_notification(sender, instance, **kwargs):
+    user_list = instance.idea.founder.all()
+    print(instance)
+    for user in user_list:
+        notify.send(instance.user, recipient=user,
+                    verb='contributed', action_object=instance, target=instance.idea)
+
+
 class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, blank=True)
@@ -99,10 +115,12 @@ class Comment(models.Model):
 
 
 class Vote(models.Model):
-    idea = models.ForeignKey(Idea, null=True, blank=True, on_delete=models.CASCADE)
+    idea = models.ForeignKey(
+        Idea, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    contribution = models.ForeignKey(Contribution, null=True, blank=True, on_delete=models.CASCADE)
+    contribution = models.ForeignKey(
+        Contribution, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "user:%s  idea:%s" % (str(self.user), str(self.idea))
@@ -111,8 +129,10 @@ class Vote(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
-    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        Post, null=True, blank=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        Comment, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "user:%s post:%s" % (str(self.user), str(self.post))
