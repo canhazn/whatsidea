@@ -5,6 +5,60 @@ import json
 from core import models
 from django.core import serializers
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator
+
+
+def list_parent_contribution(request, idea_slug):
+    idea = get_object_or_404(models.Idea, slug=idea_slug)
+    contribution_query = idea.contribution_set.filter(parent__isnull=True)
+
+    paginator = Paginator(contribution_query, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    rended_contribution = render_to_string(
+        template_name="component/list-contribution.html",
+        context={
+            "page_obj": page_obj,
+        }, request=request
+    )
+
+    if page_obj.has_next():
+        return JsonResponse({
+            "page_number": page_obj.next_page_number(),
+            "contribution": rended_contribution
+        })
+    else:
+        return JsonResponse({            
+            "contribution": rended_contribution
+        })
+
+
+def list_sub_contribution(request):
+    parent_id = request.GET.get('parent_id')
+    contribution = get_object_or_404(models.Contribution, id=parent_id)
+    contribution_query = contribution.children.all()
+
+    paginator = Paginator(contribution_query, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    rended_contribution = render_to_string(
+        template_name="component/list-sub-contribution.html",
+        context={
+            "page_obj": page_obj,
+        }, request=request
+    )
+
+    if page_obj.has_next():
+        return JsonResponse({
+            "page_number": page_obj.next_page_number(),
+            "contribution": rended_contribution
+        })
+    else:
+        return JsonResponse({            
+            "contribution": rended_contribution
+        })
 
 
 @login_required()
@@ -15,8 +69,7 @@ def contribution_create(request):
     content = data["content"]
 
     if "parent_id" in data:
-        parent_id = data["parent_id"]
-        print(parent_id)
+        parent_id = data["parent_id"]        
         parent = models.Contribution.objects.get(id=parent_id)
     else:
         parent = None
@@ -36,6 +89,8 @@ def contribution_create(request):
         },
         request=request
     )
+
+    print("contribution created: ", contribution)
 
     return JsonResponse({
         "message": "contribution created",
