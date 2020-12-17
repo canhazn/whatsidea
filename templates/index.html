@@ -88,7 +88,7 @@
                 <div>
                     {% if page_obj|length > 1 %}
                     {% for idea in page_obj %}
-                    <div id="{{ idea.slug }}" class="idea bg-white rounded" data-idea_slug="{{ idea.slug }}">
+                    <div id="{{ idea.slug }}" class="idea px-1 px-md-3 py-2 my-3 bg-white rounded" data-idea_slug="{{ idea.slug }}">
                         <h2 class="h5 my-2">
                             <a href="{% url 'idea-detail-page' idea.slug %}"> {{ idea.title }} </a>
                         </h2>
