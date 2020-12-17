@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "social_django",
     'storages',
     'django_cleanup.apps.CleanupConfig',
+    'notifications',
 
     'core',
     'idea'

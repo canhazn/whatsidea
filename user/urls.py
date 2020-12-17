@@ -11,4 +11,6 @@ urlpatterns = [
     path('user/<slug:username>/', views.user_detail, name="user-detail-page"),
     path('user/edit/<slug:username>/', views.user_edit, name="user-edit-page"),
     path('social-auth/', include('social_django.urls', namespace="social")),
+    path('read-notify/', views.read_notify, name="api-read-notify"),
+    path('list-notify/', views.list_notify, name="api-list-notify"),
 ]

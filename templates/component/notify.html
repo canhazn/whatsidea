@@ -1,0 +1,11 @@
+ {% for notify in notifies %}
+ <li class="list-group-item custom-background notifi px-3 rounded-0 border-bottom">
+     {% if notify.action_object.content %}
+     <p class="mb-0">{{ notify.action_object.content}}</p>
+     {% endif %}
+     <a class="notifi-content" href="{% url 'user-detail-page' notify.actor %}">{{ notify.actor }}</a>
+     <span>{{ notify.verb }} on</span>
+     <a href="{% url 'idea-detail-page' notify.target.slug %}">{{ notify.target }}</a><br>
+     <span>{{ notify.timestamp }}</span>
+ </li>
+ {% endfor %}
