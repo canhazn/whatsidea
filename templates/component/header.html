@@ -15,9 +15,7 @@
         right: 0;
     }
 
-    .notifications ul {
-
-    }
+    .notifications ul {}
 
     .notifi-content {
         width: 500px;
@@ -42,11 +40,12 @@
                     {% if user.is_authenticated %}
                     <div class="nav-item">
                         <div class="notifications-area d-inline-block p-0 cursor-pointer">
-                            <div id="btn-notity" class="nav-link" data-toggle="collapse" data-target="#list-notify">Notify
+                            <div id="btn-notity" class="nav-link" data-toggle="collapse" data-target="#list-notify">
+                                Notify
                                 <span class="badge bg-secondary">{% live_notify_badge %}</span>
                             </div>
 
-                            <div class="notifications rounded ">
+                            <div class="notifications rounded d-none">
                                 <ul class="list-group collapse bg-secondary" id="list-notify">
                                 </ul>
                             </div>
@@ -69,6 +68,12 @@
 
 <script>
     $('#btn-notity').on('click', function () {
+        if ($(".notifications").hasClass("d-none")) {
+            $(".notifications").removeClass("d-none")
+        } else {
+            $(".notifications").addClass("d-none")
+        }
+
         $.ajax({
             headers: {
                 "Content-Type": "application/json",
