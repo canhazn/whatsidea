@@ -58,7 +58,7 @@
     </div>
 
     <!-- vote count -->
-    <section class="contribution-area">
+    <section class="contribution-area">        
         <div class="mt-2">
             <div class="{{ idea.vote_set.all|voted:user }} btn btn-idea-vote text-decoration-none"
                 data-idea_id="{{ idea.id }}">
@@ -207,7 +207,7 @@
                 collapse_form.collapse('hide');
             }, 200)
         });
-    })  
+    })
 
 
 
@@ -219,7 +219,7 @@
         // Extract info from data-contribtution-id-* attributes            
         var id = $(button).data('contribution-id');
         let parent_id = $(button).data('parent-contribution-id');
-        
+
 
         // Initiate an AJAX request to delete contribution
         // and update the html content 
@@ -229,7 +229,7 @@
                     confirm_delete_contribution.modal('hide');
                     setTimeout(() => {
                         $(`#contribution-${id}`).remove();
-                        if (!parent_id) {                        
+                        if (!parent_id) {
                             $(`#parent-contribution-${id}`).remove();
                         }
                     }, 200)

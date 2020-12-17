@@ -5,6 +5,33 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as loginMethod, update_session_auth_hash
 from django.contrib import messages
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
+
+@login_required()
+def read_notify(request):
+    request.user.notifications.mark_all_as_read()
+    return JsonResponse({
+        "message": "notifies readed"
+    })
+
+
+@login_required()
+def list_notify(request):
+    notifies = request.user.notifications.all()[:10]
+
+    rended_notifies = render_to_string(
+        template_name="component/notify.html",
+        context={
+            "notifies": notifies
+        },
+        request=request
+    )
+
+    return JsonResponse({        
+        "notifies": rended_notifies
+    })
 
 
 def login(request):
@@ -63,9 +90,11 @@ def profileSetting(request):
 
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
+    notifies = user.notifications.all()[:15]
 
     context = {
-        'user': user
+        'user': user,
+        "notifies": notifies
     }
     return render(request, 'user/user-detail.html', context)
 

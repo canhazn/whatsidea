@@ -18,6 +18,8 @@ from django.urls import path, include
 from whatsidea.views import homePage, privacyPage, policyPage
 from django.conf import settings
 from django.conf.urls.static import static
+import notifications.urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +33,9 @@ urlpatterns = [
     path('image/', include('image.urls')),
     path('privacy/', privacyPage, name="privacy-page"),
     path('policy/', policyPage, name="policy-page"),
-    path('like/', include('like.urls'))
+    path('like/', include('like.urls')),
+    path('inbox/notifications/',
+         include(notifications.urls, namespace='notifications')),
 ]
 
 if settings.DEBUG:
