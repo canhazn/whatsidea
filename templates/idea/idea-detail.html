@@ -87,9 +87,14 @@
 
         <!-- contribution area -->
         <div class="contribution-area">
+
+            <!-- Load contribution by ajax and apend contribution here -->
             <div id="list-contribution">
             </div>
-            <button class="btn" id="btn-load-more-contribution">Load more comtributions</button>
+
+            <button class="btn btn-load-more-contribution" data-idea_id="{{ idea.id }}"
+                id="btn-load-more-contribution">Load more
+                comtributions...</button>
 
 
             <!-- delete contribution -->
@@ -138,7 +143,7 @@
 
 <script>
     let idea_content = `{{ idea.content | js }}`;
-    let content = JSON5.parse(idea_content.slice(1, -1))
+    let content = JSON.parse(idea_content.slice(1, -1))
 
     const editor = new EditorJS({
         readOnly: true,
@@ -149,13 +154,24 @@
     });
 
     // load contribution
+    function load_more_contribution(url_api) {
+        return $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            url: url_api,
+            type: "GET",
+        })
+    }
+
     function loadContribution(page_number) {
         $.ajax({
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrftoken
             },
-            url: `{% url 'api-list-parent-contribution' idea.slug %}?page=${page_number}`,
+            url: `{% url 'api-list-parent-contribution' %}?idea_id={{idea.id}}&page=${page_number}`,
             type: "GET",
         }).done(res => {
             if (res.page_number)
@@ -168,38 +184,39 @@
     }
     loadContribution(page_number = 1);
 
-    //loadContribution()
-    $("#btn-load-more-contribution").on("click", () => {
-        
-        let next_page_number = $('#btn-load-more-contribution').data("next_page_number");
-        if (!next_page_number) return;
-        loadContribution(next_page_number)
-    })
-
-    function load_sub_contribution(parent_id, page_number) {
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: `{% url 'api-list-sub-contribution' %}?parent_id=${parent_id}&page=${page_number}`,
-            type: "GET",
-        }).done(res => {
-            if (res.page_number)
-                $(`#btn-load-more-sub-contribution-${parent_id}`).data('next_page_number', res.page_number);
-            else
-                $(`#btn-load-more-sub-contribution-${parent_id}`).hide();
-            $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
-
-        })
-    }
-
-
-    $(document).on("click", ".btn-load-more-sub-contribution", function () {
+    // Click load more contribution and load
+    $(document).on("click", ".btn-load-more-contribution", function () {
+        // Get next_page_number, parent_id, idea_id from load more button
+        let load_btn = $(this);
         let next_page_number = $(this).data("next_page_number");
         let parent_id = $(this).data("parent_id");
+        let idea_id = $(this).data("idea_id");
+
         if (!next_page_number) return;
-        load_sub_contribution(parent_id, next_page_number)
+
+        // Load parent contribution
+        if (idea_id && !parent_id) {
+            let url_api = `{% url 'api-list-parent-contribution' %}?idea_id=${idea_id}&page=${page_number}`;
+            load_more_contribution(url_api).done(res => {
+                if (res.page_number)
+                    load_btn.data('next_page_number', res.page_number);
+                else
+                    load_btn.hide();
+                $("#list-contribution").append(res.contribution);
+            })
+        }
+
+        // Load sub contribution
+        if (parent_id && !idea_id) {
+            let url_api = `{% url 'api-list-sub-contribution' %}?parent_id=${parent_id}&page=${page_number}`;
+            load_more_contribution(url_api).done(res => {
+                if (res.page_number)
+                    load_btn.data('next_page_number', res.page_number);
+                else
+                    load_btn.hide();
+                $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
+            })            
+        }
     })
 
 

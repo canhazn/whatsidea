@@ -8,8 +8,9 @@ from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 
 
-def list_parent_contribution(request, idea_slug):
-    idea = get_object_or_404(models.Idea, slug=idea_slug)
+def list_parent_contribution(request):
+    idea_id = request.GET.get('idea_id')
+    idea = get_object_or_404(models.Idea, id=idea_id)
     contribution_query = idea.contribution_set.filter(parent__isnull=True)
 
     paginator = Paginator(contribution_query, 5)
@@ -29,7 +30,7 @@ def list_parent_contribution(request, idea_slug):
             "contribution": rended_contribution
         })
     else:
-        return JsonResponse({            
+        return JsonResponse({
             "contribution": rended_contribution
         })
 
@@ -56,7 +57,7 @@ def list_sub_contribution(request):
             "contribution": rended_contribution
         })
     else:
-        return JsonResponse({            
+        return JsonResponse({
             "contribution": rended_contribution
         })
 
@@ -69,7 +70,7 @@ def contribution_create(request):
     content = data["content"]
 
     if "parent_id" in data:
-        parent_id = data["parent_id"]        
+        parent_id = data["parent_id"]
         parent = models.Contribution.objects.get(id=parent_id)
     else:
         parent = None

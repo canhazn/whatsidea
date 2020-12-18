@@ -1,11 +1,13 @@
 {% for contribution in page_obj %}
 <div class="contribution" id="parent-contribution-{{ contribution.id }}">
     {% include "contribution/contribution.html" with contribution=contribution %}
+
+    <!-- append list here -->
     <div class="list-sub-sontribution ml-3" id="list-sub-contribution-{{ contribution.id }}">
      
     </div>
     {% if contribution.children.all.count > 0 %}
-    <a class="btn btn-load-more-sub-contribution" id="btn-load-more-sub-contribution-{{ contribution.id }}" data-next_page_number="1" data-parent_id="{{ contribution.id }}">Load
+    <a class="btn btn-load-more-contribution" id="btn-load-more-sub-contribution-{{ contribution.id }}" data-next_page_number="1" data-parent_id="{{ contribution.id }}">Load
         more comtributions</a>
     {% endif %}
 
