@@ -50,7 +50,11 @@
                     <div class="modal-body">
                         <form class="post-form-area" id="post-create-form">
                             <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
-                            <textarea name="content" class="form-control" placeholder="Type Content here"></textarea>
+                            <div class="form-group">
+                                <div class="rounded" id="">
+                                    <div class="" data-idea_id="{{ idea.id }}" id="create-post-editorjs"></div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -77,9 +81,8 @@
     <!-- post list -->
     {% for post in idea.post_set.all %}
     <div class="post border px-3 my-3 rounded">
-        <div class="" style="white-space: pre-line;">
-            {{ post.content }}
-        </div>
+        <div class="list-post-editorjs pt-3" id="post-editorjs-{{ post.id }}" data-content="{{ post.content }}"
+            data-editor_id="post-editorjs-{{ post.id }}"></div>
         <div class="navbar border-top p-0 mt-3 mb-2">
             <div class="heart">
                 <a class="navbar-brand mr-1 cursor-pointer btn-post-like" data-post_id="{{post.id}}">
@@ -90,7 +93,7 @@
                         {% endif %}
                     </span>
                 </a>
-                
+
                 <a class="navbar-brand mr-1 ml-3" href="#">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chat-left-dots" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
@@ -137,10 +140,10 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-post-edit" id="form-post-edit-{{ post.id }}">
-                                    <input type="text" name="idea_id" value="{{ idea.id }}" hidden>
-                                    <textarea name="content" class="form-control" placeholder="Content"
-                                        rows="6">{{ post.content }}</textarea>
+                                <form class="form-post-edit" id="form-post-edit-{{ post.id }}">                                   
+                                    <div class="edit-post-editorjs pt-3" id="edit-post-editorjs-{{ post.id }}"
+                                        data-content="{{ post.content }}" data-idea_id="{{ idea.id }}"  data-editor_id="post-editorjs-{{ post.id }}">
+                                    </div>                                   
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -198,7 +201,7 @@
                                     </span>
                                 </a>
                                 <!-- <span class="mr-3">{{ comment.like_set.all.count }}</span> -->
-                                
+
                                 <span class="mr-3 btn-reply" data-toggle="collapse"
                                     data-target="#sub-comment-form-{{ comment.id }}"
                                     data-comment_id="{{ comment.id }}">Reply</span>
@@ -324,8 +327,8 @@
                         id="sub-comment-form-{{ comment.id }}">
                         <form class="input-group create-new-comment-form" data-post_id="{{ post.id }}"
                             data-parent_id="{{ comment.id }}">
-                            <textarea class="form-control" name="content"
-                                id="textarea-comment-{{ comment.id }}" placeholder="Some comments..."></textarea>
+                            <textarea class="form-control" name="content" id="textarea-comment-{{ comment.id }}"
+                                placeholder="Some comments..."></textarea>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary btn-create-new-comment"
                                     type="submit">Send</button>
@@ -356,11 +359,48 @@
 <!-- End post area -------------->
 
 <script>
-    $("#btn-post-create").click(() => {
-        let form = $("#post-create-form").serializeJSON();
+    const create_post_editor = new EditorJS({
+        holder: 'create-post-editorjs',
+        autofocus: true,
+        minHeight: '40',
+        data: {},
+        placeholder: "Update something here ....",
+        onChange: () => {
+            console.log('Now I know that Editor\'s content changed!');
+            $("#additional-field").collapse("show");
+            $('#idea-create-form').addClass("custom-background")
+        },
+        tools: editor_tools
+    });
 
-        console.log(form);
-        create_post(form.idea_id, form.content);
+    function init_editor(element_id) {
+        let element = $(element_id);
+        let content = element.data("content");
+    }
+
+    $(".list-post-editorjs").each(function () {
+        let current = $(this);
+        console.log("currnt data: ", current.data("content"));
+        let editor = new EditorJS({
+            readOnly: true,
+            holder: current.data("editor_id"),
+            minHeight: '0',
+            data: current.data("content"),
+            tools: editor_tools
+        });
+    });
+
+    $("#btn-post-create").click(() => {
+        create_post_editor.save().then((outputData) => {
+            let idea_id = $("#create-post-editorjs").data("idea_id");
+            
+            content = JSON.stringify(outputData);
+            if (!idea_id) return;
+            create_post(idea_id, content);
+
+        }).catch((error) => {
+            console.log('Saving failed: ', error)
+        });
     });
 
     $(".btn-post-delete").click(function () {
@@ -398,7 +438,7 @@
     $(".btn-comment-like").click(function () {
         let btn = $(this);
         let comment_id = btn.data("comment_id");
-        
+
         like_comment(comment_id).done((res) => {
             count = parseInt($(btn).find(".like-count").text());
             console.log(count);
@@ -410,7 +450,7 @@
             } else {
                 $(btn).removeClass("btn-link");
                 console.log(count--);
-                if (count == 0){
+                if (count == 0) {
                     $(btn).find(".like-count").text("")
                     return;
                 }
@@ -549,9 +589,8 @@
         })
     }
 
-    $('.collapse-contribution-form').on('shown.bs.collapse', function () {        
+    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
         let textarea = $(this).find("textarea");
         textarea.focus();
-
     })
 </script>
