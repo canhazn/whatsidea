@@ -17,7 +17,7 @@ def list_parent_contribution(request, idea_slug):
     page_obj = paginator.get_page(page_number)
 
     rended_contribution = render_to_string(
-        template_name="component/list-contribution.html",
+        template_name="contribution/list-contribution.html",
         context={
             "page_obj": page_obj,
         }, request=request
@@ -44,7 +44,7 @@ def list_sub_contribution(request):
     page_obj = paginator.get_page(page_number)
 
     rended_contribution = render_to_string(
-        template_name="component/list-sub-contribution.html",
+        template_name="contribution/list-sub-contribution.html",
         context={
             "page_obj": page_obj,
         }, request=request
@@ -83,7 +83,7 @@ def contribution_create(request):
     )
 
     rended_contribution = render_to_string(
-        template_name="idea/component/contribution.html",
+        template_name="contribution/contribution.html",
         context={
             "contribution": contribution
         },

@@ -1,7 +1,7 @@
 {% for contribution in page_obj %}
 
 <div class="sub-contribution" id="sub-contribution-{{ contribution.id }}">
-    {% include "idea/component/contribution.html" with contribution=contribution %}
+    {% include "contribution/contribution.html" with contribution=contribution %}
 </div>
 
 {% endfor %}

@@ -1,6 +1,6 @@
 {% for contribution in page_obj %}
 <div class="contribution" id="parent-contribution-{{ contribution.id }}">
-    {% include "idea/component/contribution.html" with contribution=contribution %}
+    {% include "contribution/contribution.html" with contribution=contribution %}
     <div class="list-sub-sontribution ml-3" id="list-sub-contribution-{{ contribution.id }}">
      
     </div>
