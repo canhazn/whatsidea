@@ -5,7 +5,9 @@
      {% endif %}
      <a class="notifi-content" href="{% url 'user-detail-page' notify.actor %}">{{ notify.actor }}</a>
      <span>{{ notify.verb }} on</span>
+     {% if notify.target.slug %}
      <a href="{% url 'idea-detail-page' notify.target.slug %}">{{ notify.target }}</a><br>
+     {% endif %}
      <span>{{ notify.timestamp }}</span>
  </li>
  {% endfor %}
