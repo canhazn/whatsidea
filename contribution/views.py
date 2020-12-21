@@ -45,7 +45,7 @@ def list_sub_contribution(request):
     page_obj = paginator.get_page(page_number)
 
     rended_contribution = render_to_string(
-        template_name="contribution/list-sub-contribution.html",
+        template_name="contribution/list-children-contribution.html",
         context={
             "page_obj": page_obj,
         }, request=request

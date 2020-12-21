@@ -24,14 +24,14 @@
                 </span>
             </div>
 
-            <!-- If contribution is chidrent, form it point to is #sub-contribution-form-{{ contribution.parent.id }}-->
+            <!-- If contribution is chidrent, form it point to is #children-contribution-form-{{ contribution.parent.id }}-->
             {% if contribution.parent is Null %}
             <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
-                data-target="#sub-contribution-form-{{ contribution.id }}"
+                data-target="#children-contribution-form-{{ contribution.id }}"
                 data-contribution_id="{{ contribution.id }}">Reply</span>
             {% else %}
             <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
-                data-target="#sub-contribution-form-{{ contribution.parent.id }}"
+                data-target="#children-contribution-form-{{ contribution.parent.id }}"
                 data-contribution_id="{{ contribution.id }}">Reply</span>
             {% endif %}
 

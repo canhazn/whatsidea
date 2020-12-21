@@ -88,14 +88,7 @@
         <!-- contribution area -->
         <div class="contribution-area">
 
-            <!-- Load contribution by ajax and apend contribution here -->
-            <div id="list-contribution">
-            </div>
-
-            <button class="btn btn-load-more-contribution" data-idea_id="{{ idea.id }}"
-                id="btn-load-more-contribution">Load more
-                comtributions...</button>
-
+            {% include "contribution/contribution-area.html" %}
 
             <!-- delete contribution -->
             <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="confirm-delete-contribution">
@@ -153,239 +146,8 @@
         tools: editor_tools
     });
 
-    // load contribution
-    function load_more_contribution(url_api) {
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: url_api,
-            type: "GET",
-        })
-    }
 
-    function loadContribution(page_number) {
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: `{% url 'api-list-parent-contribution' %}?idea_id={{idea.id}}&page=${page_number}`,
-            type: "GET",
-        }).done(res => {
-            if (res.page_number)
-                $('#btn-load-more-contribution').data('next_page_number', res.page_number);
-            else
-                $('#btn-load-more-contribution').hide();
-            $("#list-contribution").append(res.contribution);
-
-        })
-    }
-    loadContribution(page_number = 1);
-
-    // Click load more contribution and load
-    $(document).on("click", ".btn-load-more-contribution", function () {
-        // Get next_page_number, parent_id, idea_id from load more button
-        let load_btn = $(this);
-        let next_page_number = $(this).data("next_page_number");
-        let parent_id = $(this).data("parent_id");
-        let idea_id = $(this).data("idea_id");
-
-        if (!next_page_number) return;
-
-        // Load parent contribution
-        if (idea_id && !parent_id) {
-            let url_api = `{% url 'api-list-parent-contribution' %}?idea_id=${idea_id}&page=${page_number}`;
-            load_more_contribution(url_api).done(res => {
-                if (res.page_number)
-                    load_btn.data('next_page_number', res.page_number);
-                else
-                    load_btn.hide();
-                $("#list-contribution").append(res.contribution);
-            })
-        }
-
-        // Load sub contribution
-        if (parent_id && !idea_id) {
-            let url_api = `{% url 'api-list-sub-contribution' %}?parent_id=${parent_id}&page=${page_number}`;
-            load_more_contribution(url_api).done(res => {
-                if (res.page_number)
-                    load_btn.data('next_page_number', res.page_number);
-                else
-                    load_btn.hide();
-                $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
-            })            
-        }
-    })
-
-
-
-    // Create contribution 
-    let create_contribution_form = $(".create-new-contribution-form");
-    $(document).on("submit", ".create-new-contribution-form", function (event) {
-        event.preventDefault();
-        let collapse_form = $(this);
-        collapse_form.find(".loading").removeClass('d-none');
-        collapse_form.find(".btn-create-contribution").addClass("disabled")
-        let idea_id = $(this).data("idea_id");
-        let parent_id = $(this).data("parent_id");
-
-        let form = $(this).serializeJSON();
-        create_contribution(idea_id, parent_id, form.content).done(res => {
-            collapse_form.find(".loading").addClass('d-none');
-            collapse_form.find(".btn-create-contribution").removeClass("disabled")
-            if (parent_id)
-                $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
-            else
-                $(`#list-contribution`).append(res.contribution);
-
-            collapse_form.find("textarea").val("");
-            setTimeout(() => {
-                collapse_form.collapse('hide');
-            }, 200)
-        });
-    })
-
-
-
-    // Confirm delete contribution modal and delete
-    var confirm_delete_contribution = $('#confirm-delete-contribution')
-    confirm_delete_contribution.on('show.bs.modal', function (event) {
-        // Button that triggered the modal
-        var button = event.relatedTarget
-        // Extract info from data-contribtution-id-* attributes            
-        var id = $(button).data('contribution-id');
-        let parent_id = $(button).data('parent-contribution-id');
-
-
-        // Initiate an AJAX request to delete contribution
-        // and update the html content 
-        $(".btn-contribution-delete").click(function (event) {
-            delete_contribution(id).done(res => {
-                if (res.message == "contribution deleted") {
-                    confirm_delete_contribution.modal('hide');
-                    setTimeout(() => {
-                        $(`#contribution-${id}`).remove();
-                        if (!parent_id) {
-                            $(`#parent-contribution-${id}`).remove();
-                        }
-                    }, 200)
-                }
-            })
-        });
-    })
-
-
-    $(document).on("click", ".btn-reply", function () {
-        let btn = $(this);
-        let contribution_id = btn.data("contribution_id");
-        vote_contribution(contribution_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        })
-    })
-
-
-    // Vote contribution
-    $(document).on("click", ".btn-contribution-vote", function () {
-        let btn = $(this);
-        let contribution_id = btn.data("contribution_id");
-        vote_contribution(contribution_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        })
-    })
-
-
-    // Vote idea
-    $(".btn-idea-vote").click(function () {
-        let btn = $(this);
-        let idea_id = btn.data("idea_id");
-        vote_idea(idea_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        });
-    })
-
-    function delete_contribution(contribution_id) {
-        data = JSON.stringify({
-            "contribution_id": contribution_id
-        })
-
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'contribution-delete-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        });
-    }
-
-
-    function create_contribution(idea_id, parent_id, content) {
-        data = JSON.stringify({
-            "idea_id": idea_id,
-            "parent_id": parent_id,
-            "content": content
-        })
-
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'contribution-create-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        })
-    }
-
+    // call Vote idea api when click vote
     function vote_idea(idea_id) {
         data = JSON.stringify({
             "idea_id": idea_id
@@ -403,37 +165,12 @@
         })
     }
 
-    function vote_contribution(contribution_id) {
-        data = JSON.stringify({
-            "contribution_id": contribution_id
-        })
 
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'vote-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        })
-    }
-
-    // focus when click reply
-    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
-        let textarea = $(this).find("textarea");
-        textarea.focus();
-    })
-
+    // focus input when click reply
     $('.btn-contribution-and-count').on('click', function () {
         let textarea = $(".create-new-contribution-form").find("textarea");
         textarea.focus();
     })
-
-    // $('.btn-contribution-and-count').on('touchstart', function () {
-    //     let textarea = $(".create-new-contribution-form").find("textarea");
-    //     textarea.focus();
-    // })
+    
 </script>
 {% endblock main-content %}

@@ -1,6 +1,6 @@
 {% for contribution in page_obj %}
 
-<div class="sub-contribution" id="sub-contribution-{{ contribution.id }}">
+<div class="children-contribution" id="children-contribution-{{ contribution.id }}">
     {% include "contribution/contribution.html" with contribution=contribution %}
 </div>
 

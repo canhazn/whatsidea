@@ -7,6 +7,6 @@ urlpatterns = [
     path("delete/", views.contribution_delete, name="contribution-delete-api"),
     path("list-parent-contribution/",
          views.list_parent_contribution, name="api-list-parent-contribution"),
-    path("list-sub-contribution/",
-         views.list_sub_contribution, name="api-list-sub-contribution"),
+    path("list-children-contribution/",
+         views.list_sub_contribution, name="api-list-children-contribution"),
 ]
