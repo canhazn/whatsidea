@@ -140,10 +140,11 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-post-edit" id="form-post-edit-{{ post.id }}">                                   
+                                <form class="form-post-edit" id="form-post-edit-{{ post.id }}">
                                     <div class="edit-post-editorjs pt-3" id="edit-post-editorjs-{{ post.id }}"
-                                        data-content="{{ post.content }}" data-idea_id="{{ idea.id }}"  data-editor_id="post-editorjs-{{ post.id }}">
-                                    </div>                                   
+                                        data-content="{{ post.content }}" data-idea_id="{{ idea.id }}"
+                                        data-editor_id="post-editorjs-{{ post.id }}">
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -390,10 +391,21 @@
         });
     });
 
+    $(".edit-post-editorjs").each(function () {
+        let current = $(this);
+        console.log("currnt data: ", current.data("content"));
+        let editor = new EditorJS({
+            holder: $(this).attr("id"),
+            minHeight: '0',
+            data: current.data("content"),
+            tools: editor_tools
+        });
+    });
+
     $("#btn-post-create").click(() => {
         create_post_editor.save().then((outputData) => {
             let idea_id = $("#create-post-editorjs").data("idea_id");
-            
+
             content = JSON.stringify(outputData);
             if (!idea_id) return;
             create_post(idea_id, content);
