@@ -1,0 +1,5 @@
+{% for comment in page_obj %}
+<div class="children-comment" id="children-comment-{{ comment.id }}">
+    {% include "comment/comment.html" with comment=comment %}
+</div>
+{% endfor %}

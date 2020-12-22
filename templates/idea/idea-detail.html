@@ -20,6 +20,8 @@
 
 </style>
 <main class="">
+
+    <!-- Headline: idea detail -->
     <nav class="px-0 py-2 border-bottom mb-3 d-flex justify-content-around align-items-center">
         <h1 class="h5 m-0 flex-grow-1">{{ idea.title }}</h1>
         <div class="dropdown">
@@ -48,18 +50,23 @@
             data-action="like" data-size="large" data-share="true"></div>
     </div>
 
+
+    <!-- Short description -->
     {% if idea.shortdesc %}
     <div class="p-3 border-left-success">
         <p>{{ idea.shortdesc }}</p>
     </div>
     {% endif %}
+
+    <!-- Idea content -->
     <div class="p-3 my-3 border border-left-secondary">
         <div id="editorjs"></div>
     </div>
 
-    <!-- vote count -->
+    <!-- Vote count, contribution count -->
     <section class="contribution-area">
         <div class="mt-2">
+            <!-- Vote count button -->
             <div class="{{ idea.vote_set.all|voted:user }} btn btn-idea-vote text-decoration-none"
                 data-idea_id="{{ idea.id }}">
                 <span class="h4">
@@ -73,7 +80,9 @@
                 {% if contribution.vote_set.all.count > 1 %}
                 {% endif %}
             </div>
-            <button class="btn btn-contribution-and-count">
+            
+            <!-- Contribution count button -->
+            <div class="btn btn-contribution-and-count">
                 <span class="h5" href="">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-puzzle" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
@@ -82,15 +91,13 @@
                     </svg>
                 </span>
                 <span>{{ idea.contribution_set.all.count }} contributions</span>
-            </button>
+            </div>
         </div>
 
         <!-- contribution area -->
         <div class="contribution-area">
-            <div id="list-contribution">
-            </div>
-            <button class="btn" id="btn-load-more-contribution">Load more comtributions</button>
 
+            {% include "contribution/contribution-area.html" %}
 
             <!-- delete contribution -->
             <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="confirm-delete-contribution">
@@ -138,7 +145,7 @@
 
 <script>
     let idea_content = `{{ idea.content | js }}`;
-    let content = JSON5.parse(idea_content.slice(1, -1))
+    let content = JSON.parse(idea_content.slice(1, -1))
 
     const editor = new EditorJS({
         readOnly: true,
@@ -148,227 +155,8 @@
         tools: editor_tools
     });
 
-    // load contribution
-    function loadContribution(page_number) {
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: `{% url 'api-list-parent-contribution' idea.slug %}?page=${page_number}`,
-            type: "GET",
-        }).done(res => {
-            if (res.page_number)
-                $('#btn-load-more-contribution').data('next_page_number', res.page_number);
-            else
-                $('#btn-load-more-contribution').hide();
-            $("#list-contribution").append(res.contribution);
 
-        })
-    }
-    loadContribution(page_number = 1);
-
-    //loadContribution()
-    $("#btn-load-more-contribution").on("click", () => {
-        
-        let next_page_number = $('#btn-load-more-contribution').data("next_page_number");
-        if (!next_page_number) return;
-        loadContribution(next_page_number)
-    })
-
-    function load_sub_contribution(parent_id, page_number) {
-        $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: `{% url 'api-list-sub-contribution' %}?parent_id=${parent_id}&page=${page_number}`,
-            type: "GET",
-        }).done(res => {
-            if (res.page_number)
-                $(`#btn-load-more-sub-contribution-${parent_id}`).data('next_page_number', res.page_number);
-            else
-                $(`#btn-load-more-sub-contribution-${parent_id}`).hide();
-            $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
-
-        })
-    }
-
-
-    $(document).on("click", ".btn-load-more-sub-contribution", function () {
-        let next_page_number = $(this).data("next_page_number");
-        let parent_id = $(this).data("parent_id");
-        if (!next_page_number) return;
-        load_sub_contribution(parent_id, next_page_number)
-    })
-
-
-
-    // Create contribution 
-    let create_contribution_form = $(".create-new-contribution-form");
-    $(document).on("submit", ".create-new-contribution-form", function (event) {
-        event.preventDefault();
-        let collapse_form = $(this);
-        collapse_form.find(".loading").removeClass('d-none');
-        collapse_form.find(".btn-create-contribution").addClass("disabled")
-        let idea_id = $(this).data("idea_id");
-        let parent_id = $(this).data("parent_id");
-
-        let form = $(this).serializeJSON();
-        create_contribution(idea_id, parent_id, form.content).done(res => {
-            collapse_form.find(".loading").addClass('d-none');
-            collapse_form.find(".btn-create-contribution").removeClass("disabled")
-            if (parent_id)
-                $(`#list-sub-contribution-${parent_id}`).append(res.contribution);
-            else
-                $(`#list-contribution`).append(res.contribution);
-
-            collapse_form.find("textarea").val("");
-            setTimeout(() => {
-                collapse_form.collapse('hide');
-            }, 200)
-        });
-    })
-
-
-
-    // Confirm delete contribution modal and delete
-    var confirm_delete_contribution = $('#confirm-delete-contribution')
-    confirm_delete_contribution.on('show.bs.modal', function (event) {
-        // Button that triggered the modal
-        var button = event.relatedTarget
-        // Extract info from data-contribtution-id-* attributes            
-        var id = $(button).data('contribution-id');
-        let parent_id = $(button).data('parent-contribution-id');
-
-
-        // Initiate an AJAX request to delete contribution
-        // and update the html content 
-        $(".btn-contribution-delete").click(function (event) {
-            delete_contribution(id).done(res => {
-                if (res.message == "contribution deleted") {
-                    confirm_delete_contribution.modal('hide');
-                    setTimeout(() => {
-                        $(`#contribution-${id}`).remove();
-                        if (!parent_id) {
-                            $(`#parent-contribution-${id}`).remove();
-                        }
-                    }, 200)
-                }
-            })
-        });
-    })
-
-
-    $(document).on("click", ".btn-reply", function () {
-        let btn = $(this);
-        let contribution_id = btn.data("contribution_id");
-        vote_contribution(contribution_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        })
-    })
-
-
-    // Vote contribution
-    $(document).on("click", ".btn-contribution-vote", function () {
-        let btn = $(this);
-        let contribution_id = btn.data("contribution_id");
-        vote_contribution(contribution_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        })
-    })
-
-
-    // Vote idea
-    $(".btn-idea-vote").click(function () {
-        let btn = $(this);
-        let idea_id = btn.data("idea_id");
-        vote_idea(idea_id).done((res) => {
-            count = parseInt($(btn).find(".vote-count").text());
-            count = count ? count : 0;
-            if (res.message == "vote created") {
-                $(btn).addClass("btn-link");
-                console.log(count++);
-                $(btn).find(".vote-count").text(count);
-            } else {
-                $(btn).removeClass("btn-link");
-                console.log(count--);
-                if (count == 0) {
-                    $(btn).find(".vote-count").text("");
-                    return;
-                }
-                $(btn).find(".vote-count").text(count);
-            }
-        });
-    })
-
-    function delete_contribution(contribution_id) {
-        data = JSON.stringify({
-            "contribution_id": contribution_id
-        })
-
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'contribution-delete-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        });
-    }
-
-
-    function create_contribution(idea_id, parent_id, content) {
-        data = JSON.stringify({
-            "idea_id": idea_id,
-            "parent_id": parent_id,
-            "content": content
-        })
-
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'contribution-create-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        })
-    }
-
+    // call Vote idea api when click vote
     function vote_idea(idea_id) {
         data = JSON.stringify({
             "idea_id": idea_id
@@ -386,37 +174,11 @@
         })
     }
 
-    function vote_contribution(contribution_id) {
-        data = JSON.stringify({
-            "contribution_id": contribution_id
-        })
 
-        return $.ajax({
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            url: "{% url 'vote-api' %}",
-            type: "POST",
-            dataType: "json",
-            data: data
-        })
-    }
-
-    // focus when click reply
-    $('.collapse-contribution-form').on('shown.bs.collapse', function () {
-        let textarea = $(this).find("textarea");
-        textarea.focus();
-    })
-
+    // focus input when click reply
     $('.btn-contribution-and-count').on('click', function () {
         let textarea = $(".create-new-contribution-form").find("textarea");
         textarea.focus();
     })
-
-    // $('.btn-contribution-and-count').on('touchstart', function () {
-    //     let textarea = $(".create-new-contribution-form").find("textarea");
-    //     textarea.focus();
-    // })
 </script>
 {% endblock main-content %}

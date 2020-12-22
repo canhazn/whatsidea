@@ -42,7 +42,7 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ['user', 'post']
+    list_display = ['user', 'comment', 'post']
 
 
 admin.site.register(models.Idea, IdeaAdmin)
