@@ -83,9 +83,10 @@
             btn_notify.find(".badge").addClass("d-none");
             $(".notification-list").removeClass("d-none");
         } else {            
-            $(".notification-list").addClass("d-none")
+            $(".notification-list").addClass("d-none");
+            return;
         }
-
+        
         $.ajax({
             headers: {
                 "Content-Type": "application/json",
@@ -93,8 +94,7 @@
             },
             url: "{% url 'api-list-notify' %}",
             type: "GET",
-        }).done(res => {
-            console.log(res);
+        }).done(res => {            
             btn_notify.find(".badge").removeClass("d-none");
             btn_notify.find(".loading").addClass("d-none");
             $("#list-notify").html(res.notifies)
@@ -105,9 +105,7 @@
                 },
                 url: "{% url 'api-read-notify' %}",
                 type: "GET",
-            }).done(res => {
-                console.log(res)
-            })
+            });
         })
 
     })
