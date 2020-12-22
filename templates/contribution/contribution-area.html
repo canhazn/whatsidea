@@ -2,8 +2,12 @@
 <div id="list-contribution">
 </div>
 
-<button id="btn-load-more-contribution" class="btn btn-load-more-contribution" data-next_page_number="1"
-    data-idea_id="{{ idea.id }}">Load more ...</button>
+<div id="btn-load-more-contribution" class="btn btn-load-more-contribution" data-next_page_number="1"
+    data-idea_id="{{ idea.id }}">Load more ...
+    <div class="spinner-border spinner-border-sm loading d-none" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
 <script>
     // load contribution
 
@@ -44,6 +48,9 @@
     $(document).on("click", ".btn-load-more-contribution", function () {
         // Get next_page_number, parent_id, idea_id from load more button
         let load_btn = $(this);
+
+        // Show loading icon 
+        load_btn.find(".loading").removeClass("d-none")
         let page_number = load_btn.data("next_page_number");
         let parent_id = load_btn.data("parent_id");
         let idea_id = load_btn.data("idea_id");
@@ -55,8 +62,9 @@
             console.log("loading parent contribution");
             let url_api = `{% url 'api-list-parent-contribution' %}?idea_id=${idea_id}&page=${page_number}`;
             load_more_contribution(url_api).done(res => {
-                if (res.page_number) {                    
-                    load_btn.data('next_page_number', res.page_number);                    
+                if (res.page_number) {
+                    load_btn.data('next_page_number', res.page_number);
+                    load_btn.find(".loading").addClass("d-none");
                 } else {
                     load_btn.hide();
                 }
@@ -69,18 +77,20 @@
             console.log("loading children, parent_id: ", parent_id);
             let url_api =
                 `{% url 'api-list-children-contribution' %}?parent_id=${parent_id}&page=${page_number}`;
-            load_more_contribution(url_api).done(res => {                
-                let list_element_id = `#list-children-contribution-${parent_id}`;                
-                if (res.page_number)
+            load_more_contribution(url_api).done(res => {
+                let list_element_id = `#list-children-contribution-${parent_id}`;
+                if (res.page_number) {
                     load_btn.data('next_page_number', res.page_number);
-                else
+                    load_btn.find(".loading").addClass("d-none");
+                } else {
                     load_btn.hide();
+                }
                 $(`#list-children-contribution-${parent_id}`).append(res.contribution);
             })
         }
     })
 
-    
+
 
     // ***********
     // Create contribution
