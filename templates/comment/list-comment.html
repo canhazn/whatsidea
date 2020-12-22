@@ -1,0 +1,39 @@
+{% for comment in page_obj %}
+<div id="parent-comment-{{ comment.id }}">
+    {% include "comment/comment.html" with comment=comment %}
+
+    <!-- Append list childrens comment here -->
+    <div id="list-children-comment-{{ comment.id }}" class="ml-3"></div>
+    {% if comment.children.all.count > 0 %}
+    <a class="btn btn-load-more-comment" id="btn-load-more-children-comment-{{ comment.id }}"
+        data-next_page_number="1" data-parent_id="{{ comment.id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-return-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z" />
+        </svg>
+        {{ comment.children.all.count }} more...</a>
+    {% endif %}
+
+    <!-- form create sub comment -->
+    <form class="mt-3 collapse ml-3 create-new-comment-form" data-post_id="{{ comment.post.id }}"
+        id="children-comment-form-{{ comment.id }}" data-parent_id="{{ comment.id }}">
+        <div class="text-center loading mb-3 d-none">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="border-left-secondary input-group">
+            {% csrf_token %}
+            <textarea class="form-control" name="content" placeholder="Some comments..."></textarea>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-create-comment" type="submit">Send</button>
+            </div>
+        </div>
+        {% if not user.is_authenticated %}
+        <p><a href="{% url 'user-login-page' %}?next={{ request.path }}">Login</a> required to make
+            comment!</p>
+        {% endif %}
+    </form>
+</div>
+{% endfor %}

@@ -1,0 +1,7 @@
+{% for contribution in page_obj %}
+
+<div class="children-contribution" id="children-contribution-{{ contribution.id }}">
+    {% include "contribution/contribution.html" with contribution=contribution %}
+</div>
+
+{% endfor %}
