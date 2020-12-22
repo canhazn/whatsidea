@@ -310,6 +310,10 @@
     $(document).on("click", ".btn-load-more-comment", function () {
         // Get next_page_number, parent_id, post_id from load more button
         let load_btn = $(this);
+
+        // Show loading icon 
+        load_btn.find(".loading").removeClass("d-none")
+
         let page_number = load_btn.data("next_page_number");
         let parent_id = load_btn.data("parent_id");
         let post_id = load_btn.data("post_id");
@@ -323,6 +327,7 @@
             load_more_comment(url_api).done(res => {
                 if (res.page_number) {
                     load_btn.data('next_page_number', res.page_number);
+                    load_btn.find(".loading").addClass("d-none");
                 } else {
                     load_btn.hide();
                 }
@@ -337,10 +342,12 @@
                 `{% url 'api-list-children-comment' %}?parent_id=${parent_id}&page=${page_number}`;
             load_more_comment(url_api).done(res => {
                 let list_element_id = `#list-children-comment-${parent_id}`;
-                if (res.page_number)
+                if (res.page_number) {
                     load_btn.data('next_page_number', res.page_number);
-                else
+                    load_btn.find(".loading").addClass("d-none");
+                } else {
                     load_btn.hide();
+                }
                 $(`#list-children-comment-${parent_id}`).append(res.comment);
             })
         }
@@ -499,10 +506,8 @@
         })
     })
 
-     $(document).on("click", ".btn-comment-and-count", function () {
-        let target = $(this).data("target");        
-        $(target).find("textarea").focus();        
+    $(document).on("click", ".btn-comment-and-count", function () {
+        let target = $(this).data("target");
+        $(target).find("textarea").focus();
     })
-
-    
 </script>
