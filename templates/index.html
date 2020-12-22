@@ -179,8 +179,7 @@
 
 <script>
     $(".list-editorjs").each(function () {
-        let current = $(this);
-        console.log(current.data("content"))
+        let current = $(this);        
         let editor = new EditorJS({
             readOnly: true,
             holder: current.data("editor_id"),
