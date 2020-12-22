@@ -1,0 +1,55 @@
+{% load voted %}
+
+<div class="mt-3 px-2 border-left-info" id="comment-{{ comment.id }}">
+    <div class="comment-content">
+        <p class="m-0"> {{ comment }} </p>
+    </div>
+    <div class="p-0">
+        <div class="mr-3">
+            <a href="{% url 'user-detail-page' comment.user %}">@{{ comment.user }}</a>
+            <span>{{ comment.date_created | date:"d/m/y H:i"}}</span>
+        </div>
+        <div class="navbar p-0 justify-content-start">
+
+            <!-- Comment count, comment or not -->
+            <div class="{{ comment.like_set.all|voted:user }} btn text-decoration-none btn-like-comment "
+                data-comment_id="{{ comment.id }}">
+                <span class="h5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-heart" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                    </svg>
+                </span>
+                <span class="comment-count">
+                    {% if comment.like_set.all.count > 0 %}
+                    {{ comment.like_set.all.count }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <!-- If comment is chidrent, form it point to is #children-comment-form-{{ comment.parent.id }}-->
+            {% if comment.parent is Null %}
+            <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
+                data-target="#children-comment-form-{{ comment.id }}" data-comment_id="{{ comment.id }}">Reply</span>
+            {% else %}
+            <span class="btn btn-reply cursor-pointer" data-toggle="collapse"
+                data-target="#children-comment-form-{{ comment.parent.id }}"
+                data-comment_id="{{ comment.id }}">Reply</span>
+            {% endif %}
+
+            <!-- If user owns this comment, this user can delete -->
+            <div class="dropup">
+                <span class="mr-3 btn cursor-pointer" data-toggle="dropdown"> More</span>
+                <div class="dropdown-menu dropdown-menu-right">
+                    {% if user == comment.user  %}
+                    <a class="dropdown-item cursor-pointer" data-toggle="modal" data-target="#confirm-delete-comment"
+                        data-parent-comment_id="{{ comment.parent.id }}" data-comment_id="{{comment.id}}">Delete</a>
+                    {% else %}
+                    <a class="dropdown-item cursor-not-allowed">Report</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

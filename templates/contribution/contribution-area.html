@@ -28,7 +28,7 @@
     }
 
 
-    // load first time
+    // Load comment first time
     (function loadContribution(page_number) {
         let url_api = `{% url 'api-list-parent-contribution' %}?idea_id={{idea.id}}&page=${page_number}`;
         load_more_contribution(url_api).done(res => {

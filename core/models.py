@@ -107,11 +107,11 @@ def add_notification(sender, instance, **kwargs):
 class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey(
+        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     content = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey(
-        "self", blank=True, null=True, related_name="children", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.content)
