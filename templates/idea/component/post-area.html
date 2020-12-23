@@ -345,6 +345,10 @@
                 if (res.page_number) {
                     load_btn.data('next_page_number', res.page_number);
                     load_btn.find(".loading").addClass("d-none");
+                    // update childrent count: delete loaded 
+                    let childrent_count = parseInt(load_btn.find(".children-count").text());
+                    childrent_count -= (res.page_number - 1) * 5;
+                    load_btn.find(".children-count").text(childrent_count);
                 } else {
                     load_btn.hide();
                 }
