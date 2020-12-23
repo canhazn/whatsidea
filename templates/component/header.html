@@ -17,8 +17,17 @@
 
     .notification-list .wrap {
         height: 60vh;
+        z-index: 1;
         overflow: auto;
+    }
 
+    .notification-list .dropdown-background {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;        
     }
 
     .notifi-content {
@@ -43,8 +52,8 @@
                 <div class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <div class="nav-item">
-                        <div class="notifications-area d-inline-block p-0 cursor-pointer">
-                            <div id="btn-notity" class="nav-link" data-toggle="collapse" data-target="#list-notify">
+                        <div class="notifications-area d-inline-block p-0">
+                            <div id="btn-notity" class="nav-link cursor-pointer">
                                 <span>Notify</span>
                                 <div class="badge bg-secondary">{% live_notify_badge %}</div>
                                 <div class="spinner-border spinner-border-sm loading d-none" role="status">
@@ -53,8 +62,10 @@
                             </div>
 
                             <div class="notification-list rounded d-none">
+                                <div class="dropdown-background">
+                                </div>
                                 <div class="wrap">
-                                    <ul class="list-group collapse bg-secondary" id="list-notify">
+                                    <ul class="list-group collapse bg-secondary show" id="list-notify">
                                     </ul>
                                 </div>
                             </div>
@@ -79,14 +90,16 @@
     $('#btn-notity').on('click', function () {
         let btn_notify = $(this);
         if ($(".notification-list").hasClass("d-none")) {
+            console.log("show list")
             btn_notify.find(".loading").removeClass("d-none");
             btn_notify.find(".badge").addClass("d-none");
             $(".notification-list").removeClass("d-none");
-        } else {            
+        } else {
             $(".notification-list").addClass("d-none");
+            console.log("hide list")
             return;
         }
-        
+
         $.ajax({
             headers: {
                 "Content-Type": "application/json",
@@ -94,7 +107,7 @@
             },
             url: "{% url 'api-list-notify' %}",
             type: "GET",
-        }).done(res => {            
+        }).done(res => {
             btn_notify.find(".badge").removeClass("d-none");
             btn_notify.find(".loading").addClass("d-none");
             $("#list-notify").html(res.notifies)
@@ -107,6 +120,13 @@
                 type: "GET",
             });
         })
+    });
 
+    $(".dropdown-background").on("click", function () {
+
+        if (!$(".notification-list").hasClass("d-none")) {
+            $(".notification-list").addClass("d-none");
+            console.log("hide list 2")
+        }
     })
 </script>
