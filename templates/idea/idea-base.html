@@ -19,12 +19,12 @@
 
 <main>
     <div class="row">
-        <div class="col-md-7 px-1 px-md-3">
+        <div class="col-md-7 px-0">
             {% block main-content %}
             {% endblock main-content %}
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-5 px-0 px-md-3">
             {% if idea %}   
                 {% include "idea/component/post-area.html" %}
             {% endif %}

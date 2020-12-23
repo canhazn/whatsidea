@@ -135,17 +135,6 @@
 </div>
 
 <script>
-    $(".list-editorjs").each(function () {
-        let current = $(this);
-        let editor = new EditorJS({
-            readOnly: true,
-            holder: current.data("editor_id"),
-            minHeight: '0',
-            data: current.data("content"),
-            tools: editor_tools
-        });
-    });
-
     $("#rss-feeds").rss("https://vnexpress.net/rss/startup.rss", {
         limit: 10,
         ssl: true,
