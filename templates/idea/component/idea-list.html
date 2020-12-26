@@ -1,0 +1,5 @@
+{% for idea in page_obj %}
+<div id="{{ idea.slug }}" class="idea my-3 bg-white rounded" data-idea_slug="{{ idea.slug }}">
+    {% include "idea/component/read-only-idea.html" with idea=idea %}
+</div>
+{% endfor %}
